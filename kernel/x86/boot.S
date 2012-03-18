@@ -3,7 +3,7 @@
 .globl start
 .globl multiboot
 
-#define MULTIBOOT_FLAGS 0x0
+#define MULTIBOOT_FLAGS MULTIBOOT_MEMINFO
 
 .align 4
 multiboot:
@@ -20,6 +20,10 @@ start:
 	/* load the stack */
 	lea boot_stack-4, %esp
 	mov 0, %ebp
+
+	/* multiboot specifies that %ebx contains a pointer to the multiboot info
+ 	   structure. Pass it to arch_main. */
+	pushl %ebx
 
 	/* call our C routine to get us started. */
 	cli

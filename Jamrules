@@ -33,7 +33,7 @@ rule AsPreproc $(<) : $(>)
 
 actions AsPreproc
 {
-	$(CC) $(CCFLAGS) $(>) -o $(<) -c
+	$(CC) $(CCFLAGS) -DASM_FILE $(>) -o $(<) -c
 }
 
 rule SuperAddSrcs
