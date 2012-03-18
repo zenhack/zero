@@ -5,4 +5,7 @@
 #define MEBI (KIBI * KIBI)
 #define GIBI (KIBI * MEBI)
 
+#define BYTE 1
+#define BITS(x) ((x)*8)
+
 #endif
