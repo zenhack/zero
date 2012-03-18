@@ -7,8 +7,7 @@ CCFLAGS +=
 	;	
 
 HDRS =
-	$(SUBDIR)/$(ARCH)
-	$(SUBDIR)/port
+	$(TOP)
 	;
 
 kimage = $(SUBDIR)/kimage.out ;

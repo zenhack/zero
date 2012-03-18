@@ -56,7 +56,6 @@ void heap_init(uintptr_t start, uintptr_t end) {
 	heap.start->v.used = 0;
 	heap.start->v.size = ((uintptr_t)heap.end) - ((uintptr_t)heap.start);
 	free_foot = get_foot(heap.start);
-	free_foot--;
 	free_foot->raw = heap.start->raw;
 }
 
@@ -96,7 +95,7 @@ void *kalloc(uintptr_t size) {
 }
 
 void kfree(void *ptr, uintptr_t size) {
-	Bumper *head;
+	Bumper *head, *foot, *foot_left, *head_right;
 
 	size = round_up(size);
 	size += 2 * sizeof(Bumper);
@@ -113,4 +112,23 @@ void kfree(void *ptr, uintptr_t size) {
 		printf("ERROR: size mismatch in free!");
 		while(1);
 	}
+
+	foot = get_foot(head);
+
+	foot_left = head - 1;
+	head_right = foot + 1;
+
+	if(!foot_left->v.used) {
+		size += foot_left->v.size;
+		head = get_head(foot_left);
+	}
+
+	if(!head_right->v.used) {
+		size += head_right->v.size;
+		foot = get_foot(head_right);
+	}
+
+	head->v.used = 0;
+	head->v.size = size;
+	foot->raw = head->raw;
 }
