@@ -1,0 +1,21 @@
+SubDir TOP kernel ;
+
+CCFLAGS +=
+	-ffreestanding
+	-nostdlib
+	-fno-builtin
+	;	
+
+HDRS =
+	$(SUBDIR)/$(ARCH)
+	$(SUBDIR)/port
+	;
+
+kimage = $(SUBDIR)/kimage.out ;
+
+SubInclude SUBDIR $(ARCH) ;
+SubInclude SUBDIR port ;
+
+SubDir TOP kernel ;
+
+SuperMain $(kimage) ;

@@ -1,0 +1,64 @@
+CCFLAGS =
+	-g
+	-Wall
+	-Werror
+	-Wextra
+	-pedantic
+	-I $(TOP)
+	;
+
+OPTIM = -O2 ;
+
+CC = cc -m32 ;
+LINK = ld -melf_i386 ;
+
+ARCH = x86 ;
+
+Depends nuke : clean ;
+
+rule UserObject
+{
+	switch $(>)
+	{
+	case *.S : AsPreproc $(<) : $(>) ;
+	case * : ECHO "Unknown suffix on" $(>) ;
+	}
+}
+
+rule AsPreproc $(<) : $(>)
+{ 
+	DEPENDS $(<) : $(>) ;
+	Clean clean : $(<) ;
+}
+
+actions AsPreproc
+{
+	$(CC) $(CCFLAGS) $(>) -o $(<) -c
+}
+
+rule SuperAddSrcs
+{	
+	local _ofiles = $(2:S=$(SUFOBJ)) ;
+	Objects $(2) ;
+
+	local _i ;
+	for _i in [ FGristFiles $(_ofiles) ]
+	{
+		Depends $(1) : $(_i) ;
+	}
+	for _i in $(_ofiles:D=$(SUBDIR))
+	{
+		OBJS on $(1) += $(_i) ;
+	}
+}
+
+rule SuperMain
+{
+	Clean nuke : $(1) ;
+	Depends exe : $(1) ;
+}
+
+actions SuperMain
+{
+	$(LINK) $(LINKFLAGS) -o $(1) $(OBJS)
+}

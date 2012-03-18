@@ -1,0 +1,6 @@
+SubDir TOP kernel port ;
+
+SuperAddSrcs $(kimage) :
+	stdio.c
+	string.c
+	;
