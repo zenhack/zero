@@ -23,5 +23,6 @@ SECTIONS
 		*(.bss)
 		. = ALIGN(4096);
 	}
+	kend = .; _kend = .; __kend = .;
 }
 
