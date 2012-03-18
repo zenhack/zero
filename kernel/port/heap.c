@@ -1,14 +1,15 @@
 #include <stddef.h>
 #include <kernel/port/heap.h>
 #include <kernel/port/units.h>
+#include <kernel/port/stdio.h>
 
 typedef union Bumper Bumper;
 union Bumper {
 	uintptr_t raw;
 	struct {
-		used : 1;
-		size : BITS(BYTE) * sizeof(uintptr_t) - 1;
-	};
+		uintptr_t used : 1;
+		uintptr_t size : BITS(BYTE) * sizeof(uintptr_t) - 1;
+	} v;
 };
 
 static struct {
@@ -19,14 +20,22 @@ static struct {
 
 /* round_up/round_down return n rounded to the nearest value that is zero
  * modulo sizeof(uintptr_t). the difference should be clear from the names. */
-static round_up(uintptr_t n) {
+static uintptr_t round_up(uintptr_t n) {
 	if(n % sizeof(uintptr_t))
-		return n + (sizeof(uintptr_t) - (n % sizeof(uintptr_t)))
+		return n + (sizeof(uintptr_t) - (n % sizeof(uintptr_t)));
 	return n;
 }
 
-static round_down(uintptr_t n) {
+static uintptr_t round_down(uintptr_t n) {
 	return n - n % sizeof(uintptr_t);
+}
+
+static Bumper *get_head(Bumper *foot) {
+	return (Bumper*) ((((uintptr_t)foot) - foot->v.size) + sizeof(Bumper));
+}
+
+static Bumper *get_foot(Bumper *head) {
+	return (Bumper*)((((uintptr_t)head) + head->v.size) - sizeof(Bumper));
 }
 
 void heap_init(uintptr_t start, uintptr_t end) {
@@ -37,42 +46,71 @@ void heap_init(uintptr_t start, uintptr_t end) {
 	heap.end = (Bumper*)round_down(end);
 
 	/* prolouge and epilogue blocks */
-	heap.start->used = 1;
+	heap.start->v.used = 1;
 	heap.start++;
 
 	heap.end--;
-	heap.end->used = 1;
+	heap.end->v.used = 1;
 	
 	/* initial free block */
-	heap.start->used = 0;
-	heap.start->size = ((uintptr_t)heap.end) - ((uintptr_t)heap.start);
-	free_foot = ((uintptr_t)heap) + heap.start->size
+	heap.start->v.used = 0;
+	heap.start->v.size = ((uintptr_t)heap.end) - ((uintptr_t)heap.start);
+	free_foot = get_foot(heap.start);
 	free_foot--;
-	free_foot.raw = heap.start->raw;
-}
-
-static Bumper *get_head(Bumper *foot) {
-	return (Bumper*) ((((uintptr_t)foot) - foot->size) + sizeof(Bumper));
-}
-static Bumper *get_foot(Bumper *head) {
-	return (Bumper*)((((uintptr_t)head) + head->size) - sizeof(Bumper));
+	free_foot->raw = heap.start->raw;
 }
 
 void *kalloc(uintptr_t size) {
-	Bumper *head;
+	Bumper *head, *foot, *new_foot, *new_head;
 
 	size = round_up(size); /* so we get the right alignment */
 	size += 2 * sizeof(Bumper);
 
 	/* find a block */
 	head = heap.start;
-	while((head < heap.end) && (head->used || head->size < size))
+	while((head < heap.end) && (head->v.used || head->v.size < size))
 		head = get_foot(head) + 1;
 
-	/* no room anywhere */
+	/* no room for an allocation of this size. */
 	if(head >= heap.end)
 		return NULL;
-
-	/* TODO: actually "allocate" the block. */
 	
+	/* not enough room to split, just return the whole thing. */
+	if(head->v.size <= size + 2 * sizeof(Bumper)) {
+		head->v.used = 1;
+		foot = get_foot(head);
+		foot->raw = head->raw;
+		return head + 1;
+	}
+
+	/* room for at least one byte; split the block. */
+	foot = get_foot(head);
+	foot->v.size -= size;
+	head->v.size = size;
+	new_head = get_head(foot);
+	new_foot = get_foot(head);
+	head->v.used = 1;
+	new_foot->raw = head->raw;
+	new_head->raw = foot->raw;
+	return head + 1;
+}
+
+void kfree(void *ptr, uintptr_t size) {
+	Bumper *head;
+
+	size = round_up(size);
+	size += 2 * sizeof(Bumper);
+
+	head = ptr;
+	head--;
+
+	/* sanity checks */
+	if(!head->v.used) {
+		printf("ERROR: double free!");
+		while(1);
+	}
+	if(head->v.size < size || head->v.size > size + 2 * sizeof(Bumper)) {
+		printf("ERROR: size mismatch in free!");
+		while(1);
+	}
 }

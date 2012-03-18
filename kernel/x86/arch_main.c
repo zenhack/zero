@@ -2,6 +2,7 @@
 #include <kernel/port/stdio.h>
 #include <kernel/x86/serial.h>
 #include <kernel/port/units.h>
+#include <kernel/port/heap.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -13,5 +14,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	printf("Hello, World!\n");
 	printf("Mboot info at : 0x%x, high-memory: 0x%x\n", mb_info, mb_info->mem_upper * KIBI);
 	printf("kernel end at : 0x%x", &kend);
+	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
+	
 	while(1);
 }
