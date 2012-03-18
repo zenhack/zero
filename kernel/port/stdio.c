@@ -68,5 +68,5 @@ static void fprintint(FILE *stream, int num, int base) {
 		num /= base;
 		s[i--] = "0123456789abcdef"[digit];
 	}
-	stream->write(stream, &s[i+1], 8*sizeof(int) - i + 1);
+	stream->write(stream, &s[i+1], 8*sizeof(int) - (i+1));
 }
