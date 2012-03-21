@@ -5,6 +5,7 @@ LINKFLAGS on $(kimage) += -T$(SUBDIR)/link.ld ;
 SuperAddSrcs $(kimage) :
 	boot.S
 	arch_main.c
+	gdt.c
 	gdt_load.S
 	serial.c
 	;

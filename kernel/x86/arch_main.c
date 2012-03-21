@@ -3,6 +3,7 @@
 #include <kernel/x86/serial.h>
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
+#include <kernel/x86/gdt.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -10,6 +11,7 @@ extern void *kend;
 void arch_main(MultiBootInfo *mb_info) {
 	FILE com1;
 	int i;
+	gdt_init();
 	serial_init(COM1, &com1);
 	stdout = &com1;
 	printf("Hello, World!\n");
