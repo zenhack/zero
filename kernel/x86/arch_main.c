@@ -4,6 +4,7 @@
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
 #include <kernel/x86/gdt.h>
+#include <kernel/x86/idt.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -14,6 +15,8 @@ void arch_main(MultiBootInfo *mb_info) {
 	gdt_init();
 	serial_init(COM1, &com1);
 	stdout = &com1;
+	idt_init();
+	asm volatile("int $0x3");
 	printf("Hello, World!\n");
 	printf("Mboot info at : 0x%x, high-memory: 0x%x\n", mb_info, mb_info->mem_upper * KIBI);
 	printf("kernel end at : 0x%x\n", &kend);

@@ -7,5 +7,9 @@ SuperAddSrcs $(kimage) :
 	arch_main.c
 	gdt.c
 	gdt_load.S
+	idt.c
+	isr.c
+	isr_stub.S
+	lidt.S
 	serial.c
 	;
