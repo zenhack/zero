@@ -1,0 +1,31 @@
+== Coding Style ==
+
+Rule #1: do what the rest of the code does. Below are some conventions we've adopted.
+
+=== Whitespace and indentation ===
+
+* Tabs for indentation
+* set your tabstop to 4
+* 78 columns max.
+
+=== Naming conventions ===
+
+* types are CapitalizedCameCase
+* structs are typedefed:
+
+	typedef struct TypeName TypeName
+	struct TypeName{
+		...
+	};
+
+* variables are lower_case_with_undesrcores
+
+=== Headers ===
+
+* Header guards in every header file.
+  * if your header file is at foo/bar/baz.h in the tree, it should look like:
+
+	#ifndef FOO_BAR_BAZ_H
+	#define FOO_BAR_BAZ_H
+	...
+	#endif
