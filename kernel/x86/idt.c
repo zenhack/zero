@@ -57,6 +57,6 @@ void idt_init(void) {
 	lidt(&idt_desc);
 }
 
-void int_handler_common(void) {
-	printf("Got an interrupt!");
+void int_handler_common(Regs *regs) {
+	printf("Got interrupt # %d!", regs->int_no);
 }
