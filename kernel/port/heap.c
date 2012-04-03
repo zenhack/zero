@@ -2,6 +2,7 @@
 #include <kernel/port/heap.h>
 #include <kernel/port/units.h>
 #include <kernel/port/stdio.h>
+#include <kernel/port/panic.h>
 
 typedef union Bumper Bumper;
 union Bumper {
@@ -105,12 +106,10 @@ void kfree(void *ptr, uintptr_t size) {
 
 	/* sanity checks */
 	if(!head->v.used) {
-		printf("ERROR: double free!");
-		while(1);
+		panic("double free");
 	}
 	if(head->v.size < size || head->v.size > size + 2 * sizeof(Bumper)) {
-		printf("ERROR: size mismatch in free!");
-		while(1);
+		panic("size mismatch in free!");
 	}
 
 	foot = get_foot(head);
