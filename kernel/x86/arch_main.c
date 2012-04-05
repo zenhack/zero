@@ -9,6 +9,10 @@
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
 
+void breakpoint_handler(Regs *regs) {
+	printf("A wild breakpoint appeared!\n");
+}
+
 void arch_main(MultiBootInfo *mb_info) {
 	FILE com1;
 	int i;
@@ -16,6 +20,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	serial_init(COM1, &com1);
 	stdout = &com1;
 	idt_init();
+	register_int_handler(0x3, breakpoint_handler);
 	asm volatile("int $0x3");
 	printf("Hello, World!\n");
 	printf("Mboot info at : 0x%x, high-memory: 0x%x\n", mb_info, mb_info->mem_upper * KIBI);

@@ -3,6 +3,7 @@
 #include <kernel/x86/isr.h>
 #include <kernel/x86/gdt.h>
 #include <kernel/port/stdio.h>
+#include <kernel/port/panic.h>
 
 #define IDT_ATTR_PRESENT (1<<7)
 #define IDT_ATTR_DPL(ring) (ring<<5)
@@ -33,6 +34,11 @@ struct IDTEnt {
 IDTDesc idt_desc;
 IDTEnt idt[NUM_IDT];
 
+static int_handler handlers[NUM_IDT];
+
+void register_int_handler(uint8_t num, int_handler h) {
+	handlers[num] = h;
+}
 
 void set_isr(IDTEnt *ent, uintptr_t isr) {
 	ent->offset_low = isr & 0xffff;
@@ -58,5 +64,9 @@ void idt_init(void) {
 }
 
 void int_handler_common(Regs *regs) {
-	printf("Got interrupt # %d!", regs->int_no);
+	int_handler h = handlers[regs->int_no];
+	if(h)
+		h(regs);
+	else
+		panic("Unhandled Interrupt!");
 }

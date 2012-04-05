@@ -14,6 +14,8 @@ struct Regs {
 
 typedef void (*int_handler)(Regs *);
 
+void register_int_handler(uint8_t num, int_handler h);
+
 void idt_init(void);
 
 #endif
