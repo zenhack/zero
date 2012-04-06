@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <kernel/x86/regs.h>
 #include <kernel/x86/idt.h>
 #include <kernel/x86/isr.h>
 #include <kernel/x86/gdt.h>
