@@ -7,6 +7,7 @@ LDFLAGS += -T$(TOP)/kernel/x86/link.ld
 $(TARG)_OFILES += \
 	$(TOP)/kernel/x86/boot.o\
 	$(TOP)/kernel/x86/arch_main.o\
+	$(TOP)/kernel/x86/cpuid.o\
 	$(TOP)/kernel/x86/gdt.o\
 	$(TOP)/kernel/x86/gdt_load.o\
 	$(TOP)/kernel/x86/idt.o\

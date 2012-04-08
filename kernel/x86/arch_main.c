@@ -3,8 +3,10 @@
 #include <kernel/x86/serial.h>
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
+#include <kernel/port/string.h>
 #include <kernel/x86/gdt.h>
 #include <kernel/x86/idt.h>
+#include <kernel/x86/cpuid.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -15,6 +17,8 @@ void breakpoint_handler(Regs *regs) {
 
 void arch_main(MultiBootInfo *mb_info) {
 	FILE com1;
+	CPUInfo cpu_info;
+	char cpu_vendor[13];
 	int i;
 	gdt_init();
 	serial_init(COM1, &com1);
@@ -40,5 +44,12 @@ void arch_main(MultiBootInfo *mb_info) {
 		kfree(y, 512);
 	}
 	printf("Ok!\n");
+	memset(&cpu_info, 0, sizeof(CPUInfo));
+	cpuid(&cpu_info);
+	memcpy(&cpu_vendor[0], &cpu_info.ebx, sizeof(uint32_t));
+	memcpy(&cpu_vendor[4], &cpu_info.edx, sizeof(uint32_t));
+	memcpy(&cpu_vendor[8], &cpu_info.ecx, sizeof(uint32_t));
+	cpu_vendor[12] = '\0';
+	printf("Cpu: %s\n", cpu_vendor);
 	while(1);
 }

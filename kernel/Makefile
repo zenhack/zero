@@ -1,9 +1,14 @@
 TOP=$(PWD)/../
 
+OPT=-O2
+
 CFLAGS +=\
 	-ffreestanding\
 	-nostdlib\
 	-fno-builtin\
+	-g\
+	$(OPT)\
+	-Wall -Werror -Wextra -Wno-unused-parameter\
 	-I $(TOP)
 
 TARG=kimage.out
