@@ -1,6 +1,7 @@
 #include <kernel/x86/apic.h>
 #include <kernel/x86/cpuid.h>
 
+/* Local apic register map, as defined in the intel manual, volume 3. */
 #define LOCAL_APIC         0xfee00000
 #define LOCAL_APIC_ID      0xfee00020
 #define LOCAL_APIC_VERSION 0xfee00030
@@ -30,10 +31,18 @@
 
 #define IA32_APIC_BASE     0x1b
 
+/* flags for SPUR_INT_VEC */
+#define APIC_SOFTWARE_ENABLE (1<<8)
 
 int have_apic(void) {
 	CPUInfo cpu_info;
 	cpu_info.eax = 1;
 	cpuid(&cpu_info);
-	return cpu_info.edx & (1<<9);
+	return cpu_info.edx & HAVE_APIC_FLAG;
 }
+
+void enable_apic(void) {
+	uint32_t *spur_int_vec  = (uint32_t*)SPUR_INT_VEC;
+	*spur_int_vec |= APIC_SOFTWARE_ENABLE;
+}
+

@@ -14,5 +14,10 @@ struct CPUInfo {
 
 void cpuid(CPUInfo *info);
 
+/* feature flags */
+
+/* if eax = 1 */
+#define HAVE_APIC_FLAG (1<<9)
+
 #endif
 

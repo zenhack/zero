@@ -46,6 +46,7 @@ void arch_main(MultiBootInfo *mb_info) {
 		kfree(y, 512);
 	}
 	printf("Ok!\n");
+
 	memset(&cpu_info, 0, sizeof(CPUInfo));
 	cpuid(&cpu_info);
 	memcpy(&cpu_vendor[0], &cpu_info.ebx, sizeof(uint32_t));
@@ -53,9 +54,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	memcpy(&cpu_vendor[8], &cpu_info.ecx, sizeof(uint32_t));
 	cpu_vendor[12] = '\0';
 	printf("Cpu: %s\n", cpu_vendor);
-	if(have_apic())
-		printf("Have an apic, good to go.\n");
-	else
+	
+	if(!have_apic())
 		panic("No apic found!");
+	enable_apic();
 	while(1);
 }
