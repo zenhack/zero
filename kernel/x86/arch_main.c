@@ -4,9 +4,11 @@
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
 #include <kernel/port/string.h>
+#include <kernel/port/panic.h>
 #include <kernel/x86/gdt.h>
 #include <kernel/x86/idt.h>
 #include <kernel/x86/cpuid.h>
+#include <kernel/x86/apic.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -51,5 +53,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	memcpy(&cpu_vendor[8], &cpu_info.ecx, sizeof(uint32_t));
 	cpu_vendor[12] = '\0';
 	printf("Cpu: %s\n", cpu_vendor);
+	if(have_apic())
+		printf("Have an apic, good to go.\n");
+	else
+		panic("No apic found!");
 	while(1);
 }
