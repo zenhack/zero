@@ -46,3 +46,6 @@ void enable_apic(void) {
 	*spur_int_vec |= APIC_SOFTWARE_ENABLE;
 }
 
+uint32_t get_apic_id(void) {
+	return *(uint32_t*)LOCAL_APIC_ID;
+}

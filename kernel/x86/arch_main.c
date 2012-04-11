@@ -21,6 +21,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	FILE com1;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
+	uint32_t apic_id;
 	int i;
 	gdt_init();
 	serial_init(COM1, &com1);
@@ -57,6 +58,8 @@ void arch_main(MultiBootInfo *mb_info) {
 	
 	if(!have_apic())
 		panic("No apic found!");
+	apic_id = get_apic_id();
 	enable_apic();
+	printf("Apic ID #%d is online.\n", apic_id);
 	while(1);
 }
