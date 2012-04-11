@@ -10,7 +10,7 @@ Rule #1: do what the rest of the code does. Below are some conventions we've ado
 
 === Naming conventions ===
 
-* types are CapitalizedCameCase
+* types are CapitalizedCamelCase
 * structs are typedefed:
 
 	typedef struct TypeName TypeName
