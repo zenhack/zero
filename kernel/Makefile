@@ -21,6 +21,5 @@ $(TARG): $($(TARG)_OFILES)
 	$(LD) -o $@ $($(TARG)_OFILES) $(LDFLAGS) 
 clean:
 	rm -f */*.o $(TARG)
-
 %.o: %.S
 	$(CC) -c -o $@ $(CFLAGS) -DASM_FILE $<

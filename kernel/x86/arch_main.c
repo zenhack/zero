@@ -9,6 +9,7 @@
 #include <kernel/x86/idt.h>
 #include <kernel/x86/cpuid.h>
 #include <kernel/x86/apic.h>
+#include <kernel/x86/text_console.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -18,14 +19,17 @@ void breakpoint_handler(Regs *regs) {
 }
 
 void arch_main(MultiBootInfo *mb_info) {
-	FILE com1;
+//	FILE com1;
+	FILE console;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
 	uint32_t apic_id;
 	int i;
 	gdt_init();
-	serial_init(COM1, &com1);
-	stdout = &com1;
+//	serial_init(COM1, &com1);
+//	stdout = &com1;
+	text_console_init(&console);
+	stdout = &console;
 	idt_init();
 	register_int_handler(0x3, breakpoint_handler);
 	asm volatile("int $0x3");
