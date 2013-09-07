@@ -19,17 +19,20 @@ void breakpoint_handler(Regs *regs) {
 }
 
 void arch_main(MultiBootInfo *mb_info) {
-//	FILE com1;
-	FILE console;
+	FILE com1;
+//	FILE console;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
 	uint32_t apic_id;
 	int i;
+
+	uintptr_t alignptr;
+
 	gdt_init();
-//	serial_init(COM1, &com1);
-//	stdout = &com1;
-	text_console_init(&console);
-	stdout = &console;
+	serial_init(COM1, &com1);
+	stdout = &com1;
+//	text_console_init(&console);
+//	stdout = &console;
 	idt_init();
 	register_int_handler(0x3, breakpoint_handler);
 	asm volatile("int $0x3");
@@ -51,6 +54,9 @@ void arch_main(MultiBootInfo *mb_info) {
 		kfree(y, 512);
 	}
 	printf("Ok!\n");
+
+	alignptr = (uintptr_t)kalloc_align(37, 0x100);
+	printf("alignptr : 0x%x (should end in 00)\n", alignptr);
 
 	memset(&cpu_info, 0, sizeof(CPUInfo));
 	cpuid(&cpu_info);
