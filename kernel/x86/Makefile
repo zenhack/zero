@@ -16,4 +16,6 @@ $(TARG)_OFILES += \
 	$(TOP)/kernel/x86/isr_stub.o\
 	$(TOP)/kernel/x86/lidt.o\
 	$(TOP)/kernel/x86/serial.o\
-	$(TOP)/kernel/x86/text_console.o
+	$(TOP)/kernel/x86/text_console.o\
+	$(TOP)/kernel/x86/cothread.o\
+	$(TOP)/kernel/x86/cothread_asm.o

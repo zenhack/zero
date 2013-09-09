@@ -10,6 +10,7 @@
 #include <kernel/x86/cpuid.h>
 #include <kernel/x86/apic.h>
 #include <kernel/x86/text_console.h>
+#include <kernel/x86/cothread.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -18,7 +19,23 @@ void breakpoint_handler(Regs *regs) {
 	printf("A wild breakpoint appeared!\n");
 }
 
+void thread1(void *other) {
+	while(1) {
+		printf("Thread 1 !!!\n");
+		other = yield(other);
+	}
+}
+
+void thread2(void *other) {
+	while(1) {
+		printf("Thread 2 !!!\n");
+		break;
+		other = yield(other);
+	}
+}
+
 void arch_main(MultiBootInfo *mb_info) {
+	void *other_thread;
 	FILE com1;
 //	FILE console;
 	CPUInfo cpu_info;
@@ -71,5 +88,13 @@ void arch_main(MultiBootInfo *mb_info) {
 	apic_id = get_apic_id();
 	enable_apic();
 	printf("Apic ID #%d is online.\n", apic_id);
+
+	other_thread = mk_thread(4 * KIBI, thread2);
+	if(other_thread) {
+		thread1(other_thread);
+	} else {
+		printf("kalloc_failed in %s near line %d!\n", __FILE__, __LINE__);
+	}
+	
 	while(1);
 }
