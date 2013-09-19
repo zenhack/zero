@@ -11,6 +11,7 @@
 #include <kernel/x86/apic.h>
 #include <kernel/x86/text_console.h>
 #include <kernel/x86/cothread.h>
+#include <kernel/x86/paging.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -89,12 +90,13 @@ void arch_main(MultiBootInfo *mb_info) {
 	enable_apic();
 	printf("Apic ID #%d is online.\n", apic_id);
 
+	paging_init(mb_info->mem_upper * KIBI);
 	other_thread = mk_thread(4 * KIBI, thread2);
 	if(other_thread) {
 		thread1(other_thread);
 	} else {
 		printf("kalloc_failed in %s near line %d!\n", __FILE__, __LINE__);
 	}
-	
+
 	while(1);
 }

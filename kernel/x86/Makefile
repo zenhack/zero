@@ -19,4 +19,5 @@ $(TARG)_OFILES += \
 	$(TOP)/kernel/x86/text_console.o\
 	$(TOP)/kernel/x86/cothread.o\
 	$(TOP)/kernel/x86/cothread_asm.o\
+	$(TOP)/kernel/x86/paging.o\
 	$(TOP)/kernel/x86/paging_asm.o

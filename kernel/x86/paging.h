@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define PAGESIZE 4096
+
 typedef struct PageEntry PageEntry;
 typedef struct PageStruct PageStruct;
 
@@ -21,7 +23,7 @@ struct PageEntry {
 } __attribute__((packed));
 
 struct PageStruct {
-	PageEntry *ents[1024];
+	PageEntry ents[PAGESIZE/sizeof(PageEntry)];
 };
 
 /* Sets the current page directory to the page struct located at `pdir`.
@@ -29,6 +31,6 @@ struct PageStruct {
    enable paging. */
 void set_page_dir(PageStruct *pdir);
 
-
+int paging_init(uintptr_t max_addr);
 
 #endif
