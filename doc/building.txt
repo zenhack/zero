@@ -1,0 +1,18 @@
+== Building ==
+
+If you're building for x86, on x86 (or on amd64) it should be sufficient to do:
+
+	export ARCH=x86
+	cd kernel
+	make
+
+for the lemote yeloong port, the process is similar, except that the value for
+ARCH is mips64el. In general, set ARCH to the architecture specific directory
+for your platform.
+
+If you intend to build for mips, you should have a compiler and linker in your
+path called mips64el-gcc, and mips64el-ld. This is a bit sloppy, I plan to
+clean this up a bit in the future. No C library support is necessary.
+
+Note that you cannot build anything via the makefiles in subdirectories of
+kernel.

@@ -62,11 +62,15 @@ static void fprintint(FILE *stream, int num, int base) {
 
 	int i = 8*sizeof(int);
 	s[i--] = '\0';
-	s[i] = '0';
+
+	if(num == 0) {
+		fprints(stream, "0");
+		return;
+	}
 	while(num) {
 		int digit = num % base;
 		num /= base;
 		s[i--] = "0123456789abcdef"[digit];
 	}
-	stream->write(stream, &s[i+1], 8*sizeof(int) - (i+1));
+	stream->write(stream, &s[i+1], strlen(&s[i+1]));
 }

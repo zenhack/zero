@@ -10,10 +10,10 @@ Rule #1: do what the rest of the code does. Below are some conventions we've ado
 
 === Naming conventions ===
 
-* types are CapitalizedCameCase
+* types are CapitalizedCamelCase
 * structs are typedefed:
 
-	typedef struct TypeName TypeName
+	typedef struct TypeName TypeName;
 	struct TypeName{
 		...
 	};
@@ -29,3 +29,22 @@ Rule #1: do what the rest of the code does. Below are some conventions we've ado
 	#define FOO_BAR_BAZ_H
 	...
 	#endif
+
+* include directives should always include from the top of the source tree:
+
+	#include <kernel/port/string.h>
+
+=== Preprocessor ===
+
+* Avoid macros wherever possible (#defined constants are okay.)
+* #ifdefs are banned, except in header guards, and in headers for use
+  with both assembly and C files, in which case any C code may be wrapped with
+  #ifndef ASM_FILE ... #endif.
+
+=== Source Tree ===
+
+Right now we just have a kernel, so everthing is in the kernel directory.
+Architecture independent files go in kernel/port, everything else goes in an
+architecture specific directory, eg x86.
+
+

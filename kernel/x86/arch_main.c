@@ -4,9 +4,14 @@
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
 #include <kernel/port/string.h>
+#include <kernel/port/panic.h>
 #include <kernel/x86/gdt.h>
 #include <kernel/x86/idt.h>
 #include <kernel/x86/cpuid.h>
+#include <kernel/x86/apic.h>
+#include <kernel/x86/text_console.h>
+#include <kernel/x86/cothread.h>
+#include <kernel/x86/paging.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -15,14 +20,37 @@ void breakpoint_handler(Regs *regs) {
 	printf("A wild breakpoint appeared!\n");
 }
 
+void thread1(void *other) {
+	while(1) {
+		printf("Thread 1 !!!\n");
+		other = yield(other);
+	}
+}
+
+void thread2(void *other) {
+	while(1) {
+		printf("Thread 2 !!!\n");
+		break;
+		other = yield(other);
+	}
+}
+
 void arch_main(MultiBootInfo *mb_info) {
+	void *other_thread;
 	FILE com1;
+//	FILE console;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
+	uint32_t apic_id;
 	int i;
+
+	uintptr_t alignptr;
+
 	gdt_init();
 	serial_init(COM1, &com1);
 	stdout = &com1;
+//	text_console_init(&console);
+//	stdout = &console;
 	idt_init();
 	register_int_handler(0x3, breakpoint_handler);
 	asm volatile("int $0x3");
@@ -44,6 +72,10 @@ void arch_main(MultiBootInfo *mb_info) {
 		kfree(y, 512);
 	}
 	printf("Ok!\n");
+
+	alignptr = (uintptr_t)kalloc_align(37, 0x100);
+	printf("alignptr : 0x%x (should end in 00)\n", alignptr);
+
 	memset(&cpu_info, 0, sizeof(CPUInfo));
 	cpuid(&cpu_info);
 	memcpy(&cpu_vendor[0], &cpu_info.ebx, sizeof(uint32_t));
@@ -51,5 +83,20 @@ void arch_main(MultiBootInfo *mb_info) {
 	memcpy(&cpu_vendor[8], &cpu_info.ecx, sizeof(uint32_t));
 	cpu_vendor[12] = '\0';
 	printf("Cpu: %s\n", cpu_vendor);
+	
+	if(!have_apic())
+		panic("No apic found!");
+	apic_id = get_apic_id();
+	enable_apic();
+	printf("Apic ID #%d is online.\n", apic_id);
+
+	paging_init(mb_info->mem_upper * KIBI);
+	other_thread = mk_thread(4 * KIBI, thread2);
+	if(other_thread) {
+		thread1(other_thread);
+	} else {
+		printf("kalloc_failed in %s near line %d!\n", __FILE__, __LINE__);
+	}
+
 	while(1);
 }

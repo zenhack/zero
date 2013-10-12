@@ -12,6 +12,11 @@ void heap_init(uintptr_t start, uintptr_t end);
    sizeof(uintptr_t) byte boundary. */
 void *kalloc(uintptr_t size);
 
+/* same as kalloc, except that the returned memory will be aligned on an
+ * `alignment` byte boundary (with a minimum alignment of sizeof(uintptr_t)
+ * bytes). */
+void *kalloc_align(uintptr_t size, uintptr_t alignment);
+
 /* frees a memory region previously allocated by kalloc. Note that this also
    expects the size - I have some thoughts about a more cache friendly
    allocator based on ideas from k42, so I may want that information in
