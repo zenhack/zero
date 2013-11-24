@@ -2,12 +2,6 @@
 #include "act_led.h"
 #include "mmio.h"
 
-#define GPIO_BASE (IO_BASE + 0x00200000)
-
-#define GPFSEL1 (GPIO_BASE + 4)
-#define GPSET0 (GPIO_BASE + 28)
-#define GPCLR0 (GPIO_BASE + 40)
-
 void act_led_on(void) {
 	// enable output to the led:
 	put32(GPFSEL1, 1<<18);
