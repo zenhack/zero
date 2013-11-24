@@ -19,7 +19,8 @@ OBJECTS := \
 	boot.o \
 	arch_main.o \
 	act_led.o \
-	sleep.o
+	sleep.o \
+	mmio.o
 
 kernel.out: kernel.elf
 	$(OBJCOPY) $< -O binary $@

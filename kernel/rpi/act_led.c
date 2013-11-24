@@ -10,12 +10,12 @@
 
 void act_led_on(void) {
 	// enable output to the led:
-	*((uint32_t*)GPFSEL1) = (1<<18);
+	put32(GPFSEL1, 1<<18);
 	// turn the led on:
-	*((uint32_t*)GPCLR0) = (1<<16);
+	put32(GPCLR0, 1<<16);
 }
 
 void act_led_off(void) {
-	*((uint32_t*)GPFSEL1) = (1<<18);
-	*((uint32_t*)GPSET0) = (1<<16);
+	put32(GPFSEL1, 1<<18);
+	put32(GPSET0, 1<<16);
 }
