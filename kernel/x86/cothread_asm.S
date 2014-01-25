@@ -26,7 +26,7 @@ init_thread:
 	// point and pass the yielding thread to it.
 	pop %edx
 	push %eax
-	call %edx
+	call *%edx
 	// The entry point should never return. If it does, panic.
 	push $cothread_bad_return
 	call panic
