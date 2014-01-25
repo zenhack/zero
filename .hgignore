@@ -4,3 +4,4 @@ syntax: glob
 *.out
 *.elf
 *.swp
+config.mak

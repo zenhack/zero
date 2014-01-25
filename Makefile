@@ -1,9 +1,11 @@
-
+include config.mak
 # x86:
 
 CC_x86 = cc -m32
 LD_x86 = ld -melf_i386
 OBJCOPY_x86 = objcopy
+
+TARG_x86 = kernel.x86.elf
 
 # rpi:
 
