@@ -47,7 +47,7 @@ all: $(TARG)
 kernel.$(ARCH).elf: $(OBJS)
 	$(LD) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -Tkernel/$(ARCH)/link.ld
 clean:
-	rm -f */*/*.o $(TARG)
+	rm -f */*/*.o *.elf *.bin
 %.o: %.S
 	$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
 
