@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "act_led.h"
-#include "mmio.h"
+#include <kernel/rpi/act_led.h>
+#include <kernel/rpi/mmio.h>
 
 void act_led_on(void) {
 	// enable output to the led:
