@@ -2,7 +2,6 @@ include config.mak
 # x86:
 
 CC_x86 = cc -m32
-LD_x86 = ld -melf_i386
 OBJCOPY_x86 = objcopy
 
 TARG_x86 = kernel.x86.elf
@@ -10,7 +9,6 @@ TARG_x86 = kernel.x86.elf
 # rpi:
 
 CC_rpi = arm-none-eabi-gcc
-LD_rpi = arm-none-eabi-ld
 OBJCOPY_rpi = arm-none-eabi-objcopy
 
 TARG_rpi = kernel.rpi.bin
@@ -29,8 +27,12 @@ CFLAGS +=\
 	-Wall -Werror -Wextra -Wno-unused-parameter\
 	-I .
 
+LIBS=-lgcc
+
 CC = $(CC_$(ARCH))
-LD = $(LD_$(ARCH))
+# We need to link against libgcc for things like e.g. 64 bit division
+# stubs. It's easier if we use gcc as the linker:
+LD = $(CC)
 OBJCOPY = $(OBJCOPY_$(ARCH))
 
 
@@ -43,7 +45,7 @@ TARG = $(TARG_$(ARCH))
 all: $(TARG)
 
 kernel.$(ARCH).elf: $(OBJS)
-	$(LD) -o $@ $(OBJS) $(LDFLAGS) -Tkernel/$(ARCH)/link.ld
+	$(LD) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -Tkernel/$(ARCH)/link.ld
 clean:
 	rm -f */*/*.o $(TARG)
 %.o: %.S
