@@ -47,7 +47,7 @@ kernel.$(ARCH).elf: $(OBJS)
 clean:
 	rm -f */*/*.o $(TARG)
 %.o: %.S
-	$(CC) -c -o $@ $(CFLAGS) -DASM_FILE $<
+	$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
 
 
 # rpi:
