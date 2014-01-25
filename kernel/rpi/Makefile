@@ -1,5 +1,5 @@
 
-TOOLCHAIN=arm-eabi
+TOOLCHAIN=arm-none-eabi
 
 AS=$(TOOLCHAIN)-as
 CC=$(TOOLCHAIN)-gcc
