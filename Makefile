@@ -35,10 +35,10 @@ CC = $(CC_$(ARCH))
 LD = $(CC)
 OBJCOPY = $(OBJCOPY_$(ARCH))
 
-
+BOOTSRC=kernel/$(ARCH)/boot.S
 CSRC=$(wildcard kernel/$(ARCH)/*.c kernel/port/*.c)
-SSRC=$(wildcard kernel/$(ARCH)/*.S)
-OBJS=$(SSRC:.S=.o) $(CSRC:.c=.o)
+SSRC=$(filter-out $(BOOTSRC), $(wildcard kernel/$(ARCH)/*.S))
+OBJS=$(BOOTSRC:.S=.o) $(SSRC:.S=.o) $(CSRC:.c=.o)
 
 TARG = $(TARG_$(ARCH))
 

@@ -2,7 +2,6 @@
 
 #define MULTIBOOT_FLAGS MULTIBOOT_MEMINFO
 
-.section .mboot
 .globl multiboot
 .align 4
 multiboot:
@@ -10,12 +9,6 @@ multiboot:
 	.long MULTIBOOT_FLAGS
 	.long MULTIBOOT_CHKSUM(MULTIBOOT_FLAGS)
 
-.bss
-/* reserve space for a stack. */
-	.align 16
-	.space 0x4000 /* relatively arbitrary */
-boot_stack:
-.text
 .globl start
 start:
 	/* load the stack */
@@ -34,3 +27,8 @@ start:
 hang:
 	jmp hang
 
+.bss
+/* reserve space for a stack. */
+	.align 16
+	.space 0x4000 /* relatively arbitrary */
+boot_stack:
