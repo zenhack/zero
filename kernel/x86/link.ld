@@ -4,7 +4,13 @@ SECTIONS
 {
 
 	/* start of high-memory, right ater the first block of io ports. */
-	.text 0x100000 :
+	. = 0x100000;
+	.mboot :
+	{
+		*(.mboot)
+		. = ALIGN(4096);
+	}
+	.text :
 	{
 		code = .; _code = .; __code = .;
 		*(.text)
