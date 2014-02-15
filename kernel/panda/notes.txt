@@ -1,0 +1,15 @@
+
+Various notes I've made while scouring the manuals
+
+# Booting
+
+- The pandaboard will boot a file called MLO in the root directory of the
+  active primary (FAT) partition on MMC1.
+  - can be fat12/16/32
+  - can be a single floppy like partition as well as mbr-style
+
+- The MLO image must start with a so called GP header, which contains:
+  - The size of the image (4 bytes)
+  - The load address of the executable (4 bytes)
+- The executable must be the remainder of the image.
+  - The entry point should be at the very beginning of the executable.
