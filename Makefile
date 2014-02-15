@@ -6,12 +6,21 @@ OBJCOPY_x86 = objcopy
 
 TARG_x86 = kernel.x86.elf
 
-# rpi:
+# arm:
+
+## rpi:
 
 CC_rpi = arm-none-eabi-gcc
 OBJCOPY_rpi = arm-none-eabi-objcopy
 
 TARG_rpi = kernel.rpi.bin
+
+## panda:
+
+CC_panda = arm-none-eabi-gcc
+OBJCOPY_panda = arm-none-eabi-objcopy
+
+TARG_panda = MLO
 
 # portable:
 
@@ -47,7 +56,7 @@ all: $(TARG)
 kernel.$(ARCH).elf: $(OBJS)
 	$(LD) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -Tkernel/$(ARCH)/link.ld
 clean:
-	rm -f */*/*.o *.elf *.bin
+	rm -f */*/*.o *.elf *.bin MLO
 %.o: %.S
 	$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
 
@@ -56,3 +65,9 @@ clean:
 
 kernel.rpi.bin: kernel.rpi.elf
 	$(OBJCOPY) $< -O binary $@
+
+# panda:
+
+MLO: kernel.panda.elf
+	$(OBJCOPY) $< -O binary $@
+	$(PWD)/kernel/panda/scripts/patch-size
