@@ -1,0 +1,16 @@
+# Copy this to config.mak and modify. Defaults are given in comments below.
+#
+# Target machine. Note that ARCH is somewhat of a misnomer; it isn't
+# necessarily the cpu architecture. acceptable values are x86, rpi, or
+# panda.
+# 
+# ARCH=x86
+#
+# Toolchain to use for the raspberry pi. The build system will invoke
+# $(TRIPLET_rpi)-gcc and friends to compile the kernel.
+#
+# TRIPLET_rpi=arm-none-eabi
+#
+# Same thing, but for the pandaboard:
+#
+# TRIPLET_panda=arm-none-eabi

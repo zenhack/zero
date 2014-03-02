@@ -1,4 +1,7 @@
 include config.mak
+
+ARCH ?= x86
+
 # x86:
 
 CC_x86 = cc -m32
@@ -10,15 +13,19 @@ TARG_x86 = kernel.x86.elf
 
 ## rpi:
 
-CC_rpi = arm-none-eabi-gcc
-OBJCOPY_rpi = arm-none-eabi-objcopy
+TRIPLET_rpi ?= arm-none-eabi
+
+CC_rpi = $(TRIPLET_rpi)-gcc
+OBJCOPY_rpi = $(TRIPLET_rpi)-objcopy
 
 TARG_rpi = kernel.rpi.bin
 
 ## panda:
 
-CC_panda = arm-none-eabi-gcc
-OBJCOPY_panda = arm-none-eabi-objcopy
+TRIPLET_panda ?= arm-none-eabi
+
+CC_panda = $(TRIPLET_panda)-gcc
+OBJCOPY_panda = $(TRIPLET_panda)-objcopy
 
 TARG_panda = MLO
 
