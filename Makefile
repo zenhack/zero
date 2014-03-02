@@ -11,21 +11,20 @@ TARG_x86 = kernel.x86.elf
 
 # arm:
 
+ARM_TOOL_PREFIX ?= arm-none-eabi-
+ARM_TOOL_SUFFIX ?=
+
 ## rpi:
 
-TRIPLET_rpi ?= arm-none-eabi
-
-CC_rpi = $(TRIPLET_rpi)-gcc
-OBJCOPY_rpi = $(TRIPLET_rpi)-objcopy
+CC_rpi = $(ARM_TOOL_PREFIX)gcc$(ARM_TOOL_SUFFIX)
+OBJCOPY_rpi = $(ARM_TOOL_PREFIX)objcopy$(ARM_TOOL_SUFFIX)
 
 TARG_rpi = kernel.rpi.bin
 
 ## panda:
 
-TRIPLET_panda ?= arm-none-eabi
-
-CC_panda = $(TRIPLET_panda)-gcc
-OBJCOPY_panda = $(TRIPLET_panda)-objcopy
+CC_panda = $(ARM_TOOL_PREFIX)gcc$(ARM_TOOL_SUFFIX)
+OBJCOPY_panda = $(ARM_TOOL_PREFIX)objcopy$(ARM_TOOL_SUFFIX)
 
 TARG_panda = MLO
 

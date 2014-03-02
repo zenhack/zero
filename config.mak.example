@@ -6,11 +6,8 @@
 # 
 # ARCH=x86
 #
-# Toolchain to use for the raspberry pi. The build system will invoke
-# $(TRIPLET_rpi)-gcc and friends to compile the kernel.
+# Prefix/suffix for the arm toolchain. The build system will invoke
+# e.g. $(ARM_TOOL_PREFIX)gcc$(ARM_TOOL_SUFFIX) to compile the kernel.
 #
-# TRIPLET_rpi=arm-none-eabi
-#
-# Same thing, but for the pandaboard:
-#
-# TRIPLET_panda=arm-none-eabi
+# ARM_TOOL_PREFIX=arm-none-eabi-
+# ARM_TOOL_SUFFIX=
