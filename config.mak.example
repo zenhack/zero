@@ -1,10 +1,9 @@
 # Copy this to config.mak and modify. Defaults are given in comments below.
 #
-# Target machine. Note that ARCH is somewhat of a misnomer; it isn't
-# necessarily the cpu architecture. acceptable values are x86, rpi, or
-# panda.
+# The target platform. acceptable values are x86 (standard pc), rpi
+# (raspberry pi), and panda (pandaboard).
 # 
-# ARCH=x86
+# PLATFORM=x86
 #
 # Prefix/suffix for the arm toolchain. The build system will invoke
 # e.g. $(ARM_TOOL_PREFIX)gcc$(ARM_TOOL_SUFFIX) to compile the kernel.

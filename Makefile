@@ -1,6 +1,6 @@
 include config.mak
 
-ARCH ?= x86
+PLATFORM ?= x86
 
 # x86:
 
@@ -44,23 +44,23 @@ CFLAGS +=\
 
 LIBS=-lgcc
 
-CC = $(CC_$(ARCH))
+CC = $(CC_$(PLATFORM))
 # We need to link against libgcc for things like e.g. 64 bit division
 # stubs. It's easier if we use gcc as the linker:
 LD = $(CC)
-OBJCOPY = $(OBJCOPY_$(ARCH))
+OBJCOPY = $(OBJCOPY_$(PLATFORM))
 
-BOOTSRC=kernel/$(ARCH)/boot.S
-CSRC=$(wildcard kernel/$(ARCH)/*.c kernel/port/*.c)
-SSRC=$(filter-out $(BOOTSRC), $(wildcard kernel/$(ARCH)/*.S))
+BOOTSRC=kernel/$(PLATFORM)/boot.S
+CSRC=$(wildcard kernel/$(PLATFORM)/*.c kernel/port/*.c)
+SSRC=$(filter-out $(BOOTSRC), $(wildcard kernel/$(PLATFORM)/*.S))
 OBJS=$(BOOTSRC:.S=.o) $(SSRC:.S=.o) $(CSRC:.c=.o)
 
-TARG = $(TARG_$(ARCH))
+TARG = $(TARG_$(PLATFORM))
 
 all: $(TARG)
 
-kernel.$(ARCH).elf: $(OBJS)
-	$(LD) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -Tkernel/$(ARCH)/link.ld
+kernel.$(PLATFORM).elf: $(OBJS)
+	$(LD) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -Tkernel/$(PLATFORM)/link.ld
 clean:
 	rm -f */*/*.o *.elf *.bin MLO
 %.o: %.S
