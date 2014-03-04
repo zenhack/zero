@@ -1,0 +1,8 @@
+Throughout the source tree, you will sometimes see comments with
+[citations]. This file contains information about the resources to which
+they refer.
+
+Please keep this list in alphabetical order:
+
+[omap4460]: OMAP 4460 Technical reference.
+  http://www.ti.com/lit/ug/swpu235aa/swpu235aa.pdf
