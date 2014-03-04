@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 size=`du -b MLO|awk '{print $1}'`
 [ $(( $size < 2 ** 16 )) = 1 ]
 tmpfile=`mktemp`
