@@ -1,18 +1,23 @@
 == Building ==
 
-If you're building for x86, on x86 (or on amd64) it should be sufficient to do:
+Short version:
 
-	export ARCH=x86
-	cd kernel
+	./configure --platform=...
 	make
 
-for the lemote yeloong port, the process is similar, except that the value for
-ARCH is mips64el. In general, set ARCH to the architecture specific directory
-for your platform.
+Where ... is one of panda, rpi, x86.
 
-If you intend to build for mips, you should have a compiler and linker in your
-path called mips64el-gcc, and mips64el-ld. This is a bit sloppy, I plan to
-clean this up a bit in the future. No C library support is necessary.
+The options --tool-prefix and --tool-suffix can be used to override the
+prefix/suffix of the toolchain; use this if the configure script isn't
+guessing your correctly. (This is likely; it isn't being terribly smart
+about it).
 
-Note that you cannot build anything via the makefiles in subdirectories of
-kernel.
+Additionally, configure respects environment variables like CC, LD,
+OBJCOPY...
+
+Out of tree builds are supported as well, and are recommended:
+
+	mkdir ../zero-build
+	cd ../zero-build
+	../zero/configure --platform=...
+	make

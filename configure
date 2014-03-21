@@ -21,7 +21,7 @@ guess_tool_prefix() {
 
 while [ -n "$1" ]; do
 	case "$1" in
-		--help) echo 'For build instructions, read BUILDING.md.'; exit 1 ;;
+		--help) echo 'For build instructions, read docs/building.txt.'; exit 1 ;;
 		--platform=*) platform="`arg $1`" ;;
 		--tool-prefix=*) tool_prefix="`arg $1`" ;;
 		--tool-suffix=*) tool_suffix="`arg $1`" ;;
