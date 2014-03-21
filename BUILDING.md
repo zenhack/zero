@@ -15,5 +15,9 @@ about it).
 Additionally, configure respects environment variables like CC, LD,
 OBJCOPY...
 
-There's some ongoing work to be able to do out-of-tree builds, but for
-now you must be at the root of the source tree to build.
+Out of tree builds are supported as well, and are recommended:
+
+	mkdir ../zero-build
+	cd ../zero-build
+	../zero/configure --platform=...
+	make

@@ -25,7 +25,7 @@ linker_script = $(srcdir)/kernel/$(platform)/link.ld
 objects = \
 	$(patsubst $(srcdir)/%, $(objdir)/%, $(ssrc:.S=.o) $(csrc:.c=.o))
 
-sdirs = $(shell find $(srcdir)/ -type d | grep -v '\.hg')
+sdirs = $(shell find $(srcdir)/* -type d | grep -v '\.hg')
 odirs = $(patsubst $(srcdir)/%, $(objdir)/%, $(sdirs))
 
 $(objdir)/kernel.$(platform).elf: $(objects) $(linker_script)
@@ -36,6 +36,8 @@ clean:
 		$(shell find $(objdir) -name '*.o') \
 		$(objdir)/kernel.*.elf \
 		$(cleanfiles)
+	[ "`readlink -f $(srcdir)`" = "`readlink -f $(objdir)`" ] || \
+		rm -rf $(odirs)
 
 $(objdir)/%.o: $(srcdir)/%.S | $(odirs)
 	$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
