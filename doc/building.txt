@@ -21,3 +21,6 @@ Out of tree builds are supported as well, and are recommended:
 	cd ../zero-build
 	../zero/configure --platform=...
 	make
+
+Please note that building within a subdirectory is *not* supported, and
+it is very likely that doing this will go badly for you.
