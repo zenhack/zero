@@ -1,5 +1,5 @@
-#ifndef KERNEL_MIPS64EL_INSTRUCTION_H
-#define KERNEL_MIPS64EL_INSTRUCTION_H
+#ifndef KERNEL_YEELOONG_INSTRUCTION_H
+#define KERNEL_YEELOONG_INSTRUCTION_H
 
 /* routines and constants for constructing mips instructions on the fly. */
 

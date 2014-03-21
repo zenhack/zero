@@ -1,4 +1,4 @@
-#include <kernel/mips64el/env.h>
+#include <kernel/yeeloong/env.h>
 #include <kernel/port/string.h>
 
 char *env_get(char *var, char **env) {

@@ -1,5 +1,5 @@
-#ifndef KERNEL_MIPS64EL_PMON2K_H
-#define KERNEL_MIPS64EL_PMON2K_H
+#ifndef KERNEL_YEELOONG_PMON2K_H
+#define KERNEL_YEELOONG_PMON2K_H
 
 /*
  * Copyright (c) 2002 Opsycon AB  (www.opsycon.se)

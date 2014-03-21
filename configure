@@ -13,6 +13,7 @@ errf() {
 
 guess_tool_prefix() {
 	case "$1" in
+		yeeloong) echo mips64el-unknown-elf- ;;
 		panda) echo arm-none-eabi- ;;
 		rpi) echo arm-none-eabi- ;;
 		x86) echo i686-elf- ;;

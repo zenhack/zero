@@ -1,0 +1,2 @@
+CFLAGS += -G 0
+LDFLAGS += -G 0

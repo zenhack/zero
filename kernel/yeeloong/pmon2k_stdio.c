@@ -1,4 +1,4 @@
-#include <kernel/mips64el/pmon2k_stdio.h>
+#include <kernel/yeeloong/pmon2k_stdio.h>
 
 uintptr_t pmon_write_string(FILE *out, void *buf, uintptr_t len) {
 	uintptr_t written = 0;

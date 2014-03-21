@@ -1,10 +1,10 @@
-#include <kernel/mips64el/pmon2k.h>
-#include <kernel/mips64el/env.h>
+#include <kernel/yeeloong/pmon2k.h>
+#include <kernel/yeeloong/env.h>
 #include <kernel/port/string.h>
 #include <kernel/port/stdio.h>
-#include <kernel/mips64el/pmon2k_stdio.h>
-#include <kernel/mips64el/exception.h>
-#include <kernel/mips64el/instruction.h>
+#include <kernel/yeeloong/pmon2k_stdio.h>
+#include <kernel/yeeloong/exception.h>
+#include <kernel/yeeloong/instruction.h>
 
 int arch_main(int argc, char **argv, char **env, callvectors *cv) {
 	FILE console;
