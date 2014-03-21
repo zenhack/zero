@@ -7,6 +7,7 @@ uintptr_t pmon_write_string(FILE *out, void *buf, uintptr_t len) {
 	while(len - written) {
 		cv->printf("%c", *s);
 		written++;
+		s++;
 	}
 	return len;
 }
