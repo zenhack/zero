@@ -1,7 +1,19 @@
 #!/bin/bash -e
-size=`du -b MLO|awk '{print $1}'`
+# The pandaboard expects the kernel binary to have a header telling it
+# the size of the image, and the location of the entry point. We reserve
+# space for this in ../boot.S, but the size is non-constant, so we have
+# to patch it in after the fact. That's what this script is for.
+
+size=`du -b MLO|awk '{print $1}'` # find the size of the binary
+
+# I'm being lazy and not dealing with kernels bigger than 64K, but let's
+# at least check for that ahead of time:
 [ $(( $size < 2 ** 16 )) = 1 ]
+
+# We first format the size as hexidecimal (which is assumed to be a
+# 16 bit number (4 hex digits). then we use xxd to patch it into the
+# binary.
 tmpfile=`mktemp`
-printf %04x $(du -b MLO|awk '{print $1}') > $tmpfile
+printf %04x $size > $tmpfile
 xxd -r -p $tmpfile MLO
 rm $tmpfile
