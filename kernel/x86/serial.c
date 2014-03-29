@@ -26,7 +26,7 @@ static const uint8_t
 
 static uintptr_t serial_write(FILE *stream, void *buf, uintptr_t len);
 
-void serial_init(uint16_t port, FILE *stream) {
+void serial_init(uint16_t port, SerialPort *stream) {
 	out8(port+INT_ENABLE, 0); /* disable interrupts on the device. */
 	out8(port+LINE_CNTL_REG, DLAB_SET); /* enable DLAB */
 	/* set baud rate divisor: */
@@ -36,8 +36,8 @@ void serial_init(uint16_t port, FILE *stream) {
 	out8(port+LINE_CNTL_REG, DLAB_CLEAR | DATABITS_8 | NO_PARITY);
 
 	/* set up the stream */
-	stream->aux = (void*)(uintptr_t)port;
-	stream->write = serial_write;
+	stream->file.write = serial_write;
+	stream->port = port;
 }
 
 static void serial_putc(uint16_t port, uint8_t data) {
@@ -48,9 +48,10 @@ static void serial_putc(uint16_t port, uint8_t data) {
 static uintptr_t serial_write(FILE *stream, void *buf, uintptr_t len) {
 	uint8_t *bytes = (uint8_t*)buf;
 	uintptr_t left = len;
+	uint16_t port = ((SerialPort*)stream)->port;
 
 	while(left) {
-		serial_putc((uint16_t)(uintptr_t)stream->aux, *bytes);
+		serial_putc(port, *bytes);
 		bytes++;
 		left--;
 	}

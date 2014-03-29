@@ -6,7 +6,13 @@
 
 static const uint16_t COM1 = 0x3f8;
 
+typedef struct SerialPort SerialPort;
+struct SerialPort {
+	FILE file;
+	uint16_t port;
+};
+
 /* sets up the serial port `port` and directs stream to write to it. */
-void serial_init(uint16_t port, FILE *stream);
+void serial_init(uint16_t port, SerialPort *stream);
 
 #endif

@@ -37,7 +37,7 @@ void thread2(void *other) {
 
 void arch_main(MultiBootInfo *mb_info) {
 	void *other_thread;
-	FILE com1;
+	SerialPort com1;
 //	FILE console;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
@@ -48,7 +48,7 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	gdt_init();
 	serial_init(COM1, &com1);
-	stdout = &com1;
+	stdout = (FILE*)&com1;
 //	text_console_init(&console);
 //	stdout = &console;
 	idt_init();

@@ -3,7 +3,7 @@
 uintptr_t pmon_write_string(FILE *out, void *buf, uintptr_t len) {
 	uintptr_t written = 0;
 	char *s = (char*)buf;
-	callvectors *cv = (callvectors*)out->aux;
+	callvectors *cv = ((PMONFILE*)out)->cv;
 	while(len - written) {
 		cv->printf("%c", *s);
 		written++;
@@ -12,7 +12,7 @@ uintptr_t pmon_write_string(FILE *out, void *buf, uintptr_t len) {
 	return len;
 }
 
-void init_pmon_stdout(FILE *out, callvectors *cv) {
-	out->aux = cv;
-	out->write = pmon_write_string;
+void init_pmon_stdout(PMONFILE *out, callvectors *cv) {
+	out->cv = cv;
+	out->file.write = pmon_write_string;
 }
