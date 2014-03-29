@@ -1,5 +1,6 @@
 #include <kernel/x86/multiboot.h>
 #include <kernel/port/stdio.h>
+#include <kernel/port/muxwriter.h>
 #include <kernel/x86/serial.h>
 #include <kernel/port/units.h>
 #include <kernel/port/heap.h>
@@ -38,7 +39,8 @@ void thread2(void *other) {
 void arch_main(MultiBootInfo *mb_info) {
 	void *other_thread;
 	SerialPort com1;
-//	FILE console;
+	FILE console;
+	MuxWriter mux_writer;
 	CPUInfo cpu_info;
 	char cpu_vendor[13];
 	uint32_t apic_id;
@@ -48,9 +50,9 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	gdt_init();
 	serial_init(COM1, &com1);
-	stdout = (FILE*)&com1;
-//	text_console_init(&console);
-//	stdout = &console;
+	text_console_init(&console);
+	muxwriter_init(&mux_writer, (FILE*)&com1, &console);
+	stdout = (FILE*)&mux_writer;
 	idt_init();
 	register_int_handler(0x3, breakpoint_handler);
 	asm volatile("int $0x3");
