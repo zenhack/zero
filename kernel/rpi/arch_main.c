@@ -1,10 +1,12 @@
 #include <stdint.h>
-#include <kernel/rpi/morse.h>
 #include <kernel/rpi/sleep.h>
+#include <kernel/rpi/morse.h>
+#include <kernel/rpi/morse_led.h>
 
 void arch_main(void) {
+	init_morse_led(stdout);
 	for(;;) {
-		morse_string("hello world");
+		printf("hello world");
 		sleep(10 * MORSE_UNIT);
 	}
 }

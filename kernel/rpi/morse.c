@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <kernel/rpi/act_led.h>
 #include <kernel/rpi/morse.h>
 #include <kernel/rpi/sleep.h>
@@ -52,8 +51,8 @@ static uint32_t codes[256][7] = {
 	['0'] = {DASH, DASH, DASH, DASH, DASH},
 };
 
-void morse_string(char *s) {
-	while(*s) {
+void morse_write(char *s, uintptr_t len) {
+	while(len) {
 		if(*s == ' ') {
 			sleep(4 * MORSE_UNIT);
 		} else {
@@ -65,5 +64,6 @@ void morse_string(char *s) {
 			sleep(2 * MORSE_UNIT);
 		}
 		s++;
+		len--;
 	}
 }
