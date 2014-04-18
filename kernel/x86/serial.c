@@ -24,7 +24,7 @@ static const uint8_t
 	NO_PARITY = 0,
 	LINE_READY_STATUS = (1<<5);
 
-static uintptr_t serial_write(FILE *stream, void *buf, uintptr_t len);
+static size_t serial_write(FILE *stream, void *buf, size_t len);
 
 void serial_init(uint16_t port, SerialPort *stream) {
 	out8(port+INT_ENABLE, 0); /* disable interrupts on the device. */
@@ -45,9 +45,9 @@ static void serial_putc(uint16_t port, uint8_t data) {
 	out8(port, data);
 }
 
-static uintptr_t serial_write(FILE *stream, void *buf, uintptr_t len) {
+static size_t serial_write(FILE *stream, void *buf, size_t len) {
 	uint8_t *bytes = (uint8_t*)buf;
-	uintptr_t left = len;
+	size_t left = len;
 	uint16_t port = ((SerialPort*)stream)->port;
 
 	while(left) {

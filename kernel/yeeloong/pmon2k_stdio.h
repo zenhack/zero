@@ -10,7 +10,7 @@ struct PMONFILE {
 	callvectors *cv;
 };
 
-uintptr_t pmon_write_string(FILE *out, void *buf, uintptr_t len);
+size_t pmon_write_string(FILE *out, void *buf, size_t len);
 
 void init_pmon_stdout(PMONFILE *out, callvectors *cv);
 

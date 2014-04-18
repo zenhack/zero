@@ -51,7 +51,7 @@ static uint32_t codes[256][7] = {
 	['0'] = {DASH, DASH, DASH, DASH, DASH},
 };
 
-void morse_write(char *s, uintptr_t len) {
+void morse_write(char *s, size_t len) {
 	while(len) {
 		if(*s == ' ') {
 			sleep(4 * MORSE_UNIT);

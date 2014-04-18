@@ -9,7 +9,7 @@
  */
 typedef struct MuxWriter MuxWriter;
 struct MuxWriter {
-	uintptr_t (*write)(FILE *, void *, uintptr_t);
+	size_t (*write)(FILE *, void *, size_t);
 	FILE *files[2];
 };
 

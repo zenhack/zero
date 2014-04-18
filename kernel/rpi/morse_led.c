@@ -1,7 +1,7 @@
 #include <kernel/rpi/morse_led.h>
 #include <kernel/rpi/morse.h>
 
-static uintptr_t morse_led_write(FILE *out, void *buf, uintptr_t len) {
+static size_t morse_led_write(FILE *out, void *buf, size_t len) {
 	char *str = (char *)buf;
 	morse_write(str, len);
 	return len;

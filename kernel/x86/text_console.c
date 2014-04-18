@@ -66,9 +66,9 @@ static void scroll(void) {
 	}
 }
 
-static uintptr_t text_console_write(FILE *stream, void *buf, uintptr_t len) {
+static size_t text_console_write(FILE *stream, void *buf, size_t len) {
 	char *s = (char*)buf;
-	uintptr_t left = len;
+	size_t left = len;
 	while(left) {
 		switch(*s) {
 		case '\r':

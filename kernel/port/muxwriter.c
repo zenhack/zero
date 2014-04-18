@@ -1,6 +1,6 @@
 #include <kernel/port/muxwriter.h>
 
-static uintptr_t muxwriter_write(FILE *file, void *buf, uintptr_t len) {
+static size_t muxwriter_write(FILE *file, void *buf, size_t len) {
 	MuxWriter *mux = (MuxWriter *)file;
 	mux->files[0]->write(mux->files[0], buf, len);
 	return mux->files[1]->write(mux->files[1], buf, len);

@@ -1,7 +1,7 @@
 #ifndef KERNEL_PORT_STDIO_H
 #define KERNEL_PORT_STDIO_H
 
-#include <stdint.h>
+#include <stddef.h>
 
 /**
  * A FILE object is a stream to which data can be written (and, perhaps,
@@ -16,7 +16,7 @@
  */
 typedef struct FILE FILE;
 struct FILE {
-	uintptr_t (*write)(FILE *out, void *buf, uintptr_t len);
+	size_t (*write)(FILE *out, void *buf, size_t len);
 };
 
 extern FILE *stdout;

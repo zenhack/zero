@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-uintptr_t strlen(char *s);
+size_t strlen(char *s);
 
 int strncmp(char *s1, char *s2, size_t len);
 
