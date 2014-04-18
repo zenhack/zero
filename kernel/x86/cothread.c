@@ -6,7 +6,7 @@
 /* defined in cothread_asm.S, along with  yield(). */
 extern void *init_thread(void *stack, void (*entry)(void *));
 
-void *mk_thread(uintptr_t stack_size, void (*entry)(void *)) {
+void *mk_thread(size_t stack_size, void (*entry)(void *)) {
 	/* align our stack on a page boundary. */
 	void *stack = kalloc_align(stack_size, 4 * KIBI);
 	if(!stack) {
