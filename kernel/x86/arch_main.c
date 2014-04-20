@@ -13,6 +13,7 @@
 #include <kernel/x86/text_console.h>
 #include <kernel/x86/cothread.h>
 #include <kernel/x86/paging.h>
+#include <kernel/x86/hlt.h>
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -52,5 +53,5 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	paging_init(mb_info->mem_upper * KIBI);
 
-	while(1);
+	while(1) hlt();
 }
