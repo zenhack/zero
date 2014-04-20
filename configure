@@ -1,9 +1,5 @@
 #!/bin/bash -e
 
-arg() {
-	printf '%s' "$1" | sed 's/.*=//'
-}
-
 errf() {
 	fmt="$1"
 	shift
@@ -14,8 +10,7 @@ errf() {
 guess_tool_prefix() {
 	case "$1" in
 		yeeloong) echo mips64el-unknown-elf- ;;
-		panda) echo arm-none-eabi- ;;
-		rpi) echo arm-none-eabi- ;;
+		panda|rpi) echo arm-none-eabi- ;;
 		x86) echo i686-elf- ;;
 	esac
 }
@@ -23,9 +18,9 @@ guess_tool_prefix() {
 while [ -n "$1" ]; do
 	case "$1" in
 		--help) echo 'For build instructions, read docs/building.txt.'; exit 1 ;;
-		--platform=*) platform="`arg $1`" ;;
-		--tool-prefix=*) tool_prefix="`arg $1`" ;;
-		--tool-suffix=*) tool_suffix="`arg $1`" ;;
+		--platform=*) platform="${1#*=}" ;;
+		--tool-prefix=*) tool_prefix="${1#*=}" ;;
+		--tool-suffix=*) tool_suffix="${1#*=}" ;;
 		*) errf 'unrecognized argument %s.' "$1" ;;
 	esac
 	shift
