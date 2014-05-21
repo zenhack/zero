@@ -7,13 +7,13 @@
 #include <kernel/yeeloong/instruction.h>
 
 int arch_main(int argc, char **argv, char **env, callvectors *cv) {
-	FILE console;
+	PMONFILE console;
 //	uint32_t *tlb_refill_vec;
 
 	cv->printf("Booted!\n");
 	
 	init_pmon_stdout(&console, cv);
-	stdout = &console;
+	stdout = (FILE *)&console;
 
 	/* Insert a jump instruction to the refill handler at the right vector. */
 //	tlb_refill_vec = (uint32_t*)BEV0_TLB_REFILL_VEC;
