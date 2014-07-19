@@ -23,6 +23,13 @@ void arch_main(MultiBootInfo *mb_info) {
 	FILE console;
 	MuxWriter mux_writer;
 	uint32_t local_apic_id;
+	MultiBootInfo my_mb_info;
+
+	/* We're going to start touching memory before too long, and we don't
+	 * actually know where this struct is. let's get our own copy and use
+	 * that: */
+	my_mb_info = *mb_info;
+	mb_info = &my_mb_info;
 
 	gdt_init();
 
