@@ -1,5 +1,5 @@
-#ifndef KERNEL_X86_MMIO_H
-#define KERNEL_X86_MMIO_H
+#ifndef KERNEL_PORT_MMIO_H
+#define KERNEL_PORT_MMIO_H
 
 /* Utility library for doing memory mapped io. */
 

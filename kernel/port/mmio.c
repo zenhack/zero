@@ -1,4 +1,4 @@
-#include <kernel/x86/mmio.h>
+#include <kernel/port/mmio.h>
 
 uint32_t get32(uintptr_t addr) {
 	return *(uint32_t*)addr;

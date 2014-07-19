@@ -1,6 +1,6 @@
 #include <kernel/x86/apic.h>
 #include <kernel/x86/cpuid.h>
-#include <kernel/x86/mmio.h>
+#include <kernel/port/mmio.h>
 
 /* Local apic register map, as defined in the intel manual, volume 3. */
 #define LOCAL_APIC         0xfee00000
