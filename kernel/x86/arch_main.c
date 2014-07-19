@@ -22,7 +22,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	SerialPort com1;
 	FILE console;
 	MuxWriter mux_writer;
-	uint32_t apic_id;
+	uint32_t local_apic_id;
 
 	gdt_init();
 
@@ -47,9 +47,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	if(!have_apic()) {
 		panic("No apic found!\n");
 	}
-	apic_id = get_apic_id();
-	enable_apic();
-	printf("Apic ID #%d is online.\n", apic_id);
+	local_apic_id = get_local_apic_id();
+	enable_local_apic();
+	printf("Local Apic ID #%d is online.\n", local_apic_id);
 
 	paging_init(mb_info->mem_upper * KIBI);
 

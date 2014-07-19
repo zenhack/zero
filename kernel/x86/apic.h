@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 int have_apic(void);
-void enable_apic(void);
-uint32_t get_apic_id(void);
+void enable_local_apic(void);
+uint32_t get_local_apic_id(void);
 
 #endif

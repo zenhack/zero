@@ -42,10 +42,10 @@ int have_apic(void) {
 	return cpu_info.edx & HAVE_APIC_FLAG;
 }
 
-void enable_apic(void) {
+void enable_local_apic(void) {
 	put32(SPUR_INT_VEC, get32(SPUR_INT_VEC) | APIC_SOFTWARE_ENABLE);
 }
 
-uint32_t get_apic_id(void) {
+uint32_t get_local_apic_id(void) {
 	return get32(LOCAL_APIC_ID);
 }
