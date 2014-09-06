@@ -1,4 +1,4 @@
-#include <kernel/panda/mmio.h>
+#include <kernel/port/mmio.h>
 #include <kernel/panda/uart.h>
 
 void uart_clear(uint32_t uart_base) {
