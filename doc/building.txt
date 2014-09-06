@@ -5,7 +5,7 @@ Short version:
 	./configure --platform=...
 	make
 
-Where ... is one of panda, rpi, x86.
+Where ... is one of panda, rpi, x86, yeeloong.
 
 The options --tool-prefix and --tool-suffix can be used to override the
 prefix/suffix of the toolchain; use this if the configure script isn't
