@@ -3,8 +3,6 @@
 
 /* constants for various MMIO devices. */
 
-#include <stdint.h>
-
 #define IO_BASE 0x20000000
 
 #define GPIO_BASE (IO_BASE + 0x00200000)
