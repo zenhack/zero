@@ -4,5 +4,11 @@ they refer.
 
 Please keep this list in alphabetical order:
 
+[bcm2835]: BCM2835 ARM Peripherals
+  http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
+
+[dwelch-uart]: David Welch's notes on the rpi uart.
+  https://github.com/dwelch67/raspberrypi/blob/master/uart01/README
+
 [omap4460]: OMAP 4460 Technical reference.
   http://www.ti.com/lit/ug/swpu235aa/swpu235aa.pdf
