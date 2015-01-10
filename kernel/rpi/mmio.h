@@ -7,9 +7,12 @@
 
 #define GPIO_BASE (IO_BASE + 0x00200000)
 
-#define GPFSEL1 (GPIO_BASE + 4)
-#define GPSET0 (GPIO_BASE + 28)
-#define GPCLR0 (GPIO_BASE + 40)
+#define GPFSEL1 (GPIO_BASE + 0x4)
+#define GPSET0 (GPIO_BASE + 0x1c)
+#define GPCLR0 (GPIO_BASE + 0x28)
+#define GPPUD (GPIO_BASE + 0x94)
+#define GPPUDCLK0 (GPIO_BASE + 0x98)
+#define GPPUDCLK1 (GPIO_BASE + 0x9c)
 
 #define AUX_BASE (IO_BASE + 0x215000)
 
