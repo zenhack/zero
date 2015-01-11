@@ -1,16 +1,25 @@
 #include <stdint.h>
 #include <kernel/rpi/act_led.h>
-#include <kernel/rpi/mmio.h>
+#include <kernel/rpi/gpio.h>
 #include <kernel/port/mmio.h>
 
+/* The GPIO pin assigned to the led: */
+#define LED_PIN 16
+
+/* Each of these works as follows:
+ *
+ * 1. set the pin as an output
+ * 2. set or clear the pin, as appropriate.
+ *
+ * Note that these are *not* backwards -- clearing the pin turns the led *on*.
+ */
+
 void act_led_on(void) {
-	// enable output to the led:
-	put32(GPFSEL1, 1<<18);
-	// turn the led on:
-	put32(GPCLR0, 1<<16);
+	gpio_fsel(LED_PIN, GPIO_F_OUT);
+	gpio_clr(LED_PIN);
 }
 
 void act_led_off(void) {
-	put32(GPFSEL1, 1<<18);
-	put32(GPSET0, 1<<16);
+	gpio_fsel(LED_PIN, GPIO_F_OUT);
+	gpio_set(LED_PIN);
 }
