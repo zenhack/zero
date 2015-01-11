@@ -22,13 +22,13 @@
 static uint32_t baud_reg_from_rate(uint32_t baudrate) {
 	/* From [bcm2835] (sec 2.2.1),
 	 *
-	 *     baudrate = system_clock_freq / (8 * (baudrate_req + 1))
+	 *     baudrate = system_clock_freq / (8 * (baudrate_reg + 1))
 	 */
 
 	/* The system clock for the rpi is: */
 	uint32_t system_clock_freq = 700 * MEGA; /* XXX: Is this true? [dwelch-uart] seems to think it's 250 MHz. */
 	/* So, the register value can be computed as: */
-	return system_clock_freq / (8 * baudrate) + 1;
+	return system_clock_freq / (8 * baudrate) - 1;
 }
 
 void uart_init(void) {
