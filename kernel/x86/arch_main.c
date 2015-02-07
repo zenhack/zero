@@ -15,6 +15,12 @@
 #include <kernel/x86/paging.h>
 #include <kernel/x86/hlt.h>
 
+#include <kernel/x86/apic_timer.h>
+
+void timer_interrupt(Regs *regs) {
+	printf("Timer interrupt!\n");
+}
+
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
 
@@ -58,7 +64,12 @@ void arch_main(MultiBootInfo *mb_info) {
 	enable_local_apic();
 	printf("Local Apic ID #%d is online.\n", local_apic_id);
 
+	register_int_handler(255, timer_interrupt);
+	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
+	apic_timer_set(20000);
+
 	paging_init(mb_info->mem_upper * KIBI);
+
 
 	while(1) hlt();
 }
