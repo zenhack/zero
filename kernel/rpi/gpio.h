@@ -16,15 +16,6 @@
 #define GPIO_F_ALT4 3
 #define GPIO_F_ALT5 2 
 
-#define GPIO_BASE (IO_BASE + 0x00200000)
-#define GPIO_INDEX(off, idx) (GPIO_BASE + (off) + ((idx)<<2))
-
-#define GPFSEL(n) GPIO_INDEX(0x0, n)
-#define GPSET(n) GPIO_INDEX(0x1c, n)
-#define GPCLR(n) GPIO_INDEX(0x28, n)
-
-#define GPPUD (GPIO_BASE + 0x94)
-#define GPPUDCLK(n) GPIO_INDEX(0x98, n)
 
 /* set pin to function select mode `func`. */
 void gpio_fsel(int pin, uint32_t func);
