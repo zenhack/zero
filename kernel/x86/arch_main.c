@@ -14,6 +14,7 @@
 #include <kernel/x86/cothread.h>
 #include <kernel/x86/paging.h>
 #include <kernel/x86/hlt.h>
+#include <kernel/x86/8259pic.h>
 
 #include <kernel/x86/apic_timer.h>
 
@@ -57,6 +58,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	 * kernel and mem_upper. */
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
 	
+	disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
 	}
@@ -66,10 +68,12 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	register_int_handler(255, timer_interrupt);
 	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
-	apic_timer_set(20000);
+	apic_timer_set(200);
+
 
 	paging_init(mb_info->mem_upper * KIBI);
 
+	asm volatile("sti");
 
 	while(1) hlt();
 }

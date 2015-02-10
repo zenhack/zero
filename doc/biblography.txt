@@ -4,6 +4,9 @@ they refer.
 
 Please keep this list in alphabetical order:
 
+[8259]: 8259A Programmable interrupt controller datasheet
+  http://pdos.csail.mit.edu/6.828/2010/readings/hardware/8259A.pdf
+
 [bcm2835]: BCM2835 ARM Peripherals
   http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
 
@@ -12,3 +15,6 @@ Please keep this list in alphabetical order:
 
 [omap4460]: OMAP 4460 Technical reference.
   http://www.ti.com/lit/ug/swpu235aa/swpu235aa.pdf
+
+[osdev/*]: osdev wiki.
+    http:// wiki.osdev.org/*

@@ -69,5 +69,6 @@ void int_handler_common(Regs *regs) {
 	if(h)
 		h(regs);
 	else
+		printf("Unhandled interrupt #: %d\n", regs->int_no);
 		panic("Unhandled Interrupt!");
 }
