@@ -20,7 +20,7 @@ void apic_timer_init(uint8_t int_no, uint8_t divisor, uint8_t mode) {
 	/** set the lvt entry: **/
 	LVTEnt lvt_ent;
 	lvt_ent.raw = get32(LVT_TIMER);
-	lvt_ent.v.deliv_mode = mode;
+	lvt_ent.v.timer_mode = mode;
 	lvt_ent.v.vector = int_no;
 	lvt_ent.v.masked = 0;
 	put32(LVT_TIMER, lvt_ent.raw);

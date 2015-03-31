@@ -42,7 +42,7 @@ union LVTEnt {
 	struct {
 		uint32_t vector : 8;
 		uint32_t deliv_mode : 3;
-		uint32_t res11;
+		uint32_t res11 : 1;
 		uint32_t deliv_status : 1;
 		uint32_t int_input_pin_polarity : 1;
 		uint32_t remote_irr : 1;
