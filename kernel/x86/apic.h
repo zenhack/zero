@@ -48,8 +48,8 @@ union LVTEnt {
 		uint32_t remote_irr : 1;
 		uint32_t trigger_mode : 1;
 		uint32_t masked : 1;
-		uint32_t timer_mode : 1;
-		uint32_t res17_31 : 15;
+		uint32_t timer_mode : 2;
+		uint32_t res19_31 : 13;
 	} v;
 	uint32_t raw;
 };
