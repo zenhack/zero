@@ -66,9 +66,10 @@ void idt_init(void) {
 
 void int_handler_common(Regs *regs) {
 	int_handler h = handlers[regs->int_no];
-	if(h)
+	if(h) {
 		h(regs);
-	else
+	} else {
 		printf("Unhandled interrupt #: %d\n", regs->int_no);
 		panic("Unhandled Interrupt!");
+	}
 }
