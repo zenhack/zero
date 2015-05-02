@@ -1,4 +1,5 @@
 #include <kernel/x86/gdt.h>
+#include <kernel/x86/apic.h>
 
 /* This stub is called from the interrupt handlers in isr.c */
 
@@ -35,4 +36,13 @@ isr_stub:
 	popa
 	addl $8, %esp
 
+	/* Signal the end of interrupt. We have to write to the APIC's EOI
+         * register to do this, but it doesn't matter *what* we write, so we
+         * just pick something that's handy.
+         *
+	 * Note that we need to insert some conditional logic here to avoid this
+	 * for interrupts that shouldn't have it. These include "those delivered
+	 * with the NMI, SMI, INIT, ExtINT, the start-up, or INIT-Deassert
+	 * delivery mode" [intel/3/10.8.5] */ 
+	movl %eax, EOI
 	iret

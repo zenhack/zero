@@ -13,6 +13,9 @@ Please keep this list in alphabetical order:
 [dwelch-uart]: David Welch's notes on the rpi uart.
   https://github.com/dwelch67/raspberrypi/blob/master/uart01/README
 
+[intel/*/*]: Intel manual (/volume/section)
+    https://www-ssl.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html
+
 [omap4460]: OMAP 4460 Technical reference.
   http://www.ti.com/lit/ug/swpu235aa/swpu235aa.pdf
 

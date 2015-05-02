@@ -1,8 +1,6 @@
 #ifndef KERNEL_X86_APIC_H
 #define KERNEL_X86_APIC_H
 
-#include <stdint.h>
-
 /* Local apic register map, as defined in the intel manual, volume 3. */
 #define LOCAL_APIC         0xfee00000
 #define LOCAL_APIC_ID      0xfee00020
@@ -36,6 +34,10 @@
 /* flags for SPUR_INT_VEC */
 #define APIC_SOFTWARE_ENABLE (1<<8)
 
+#ifndef ASM_FILE
+
+#include <stdint.h>
+
 typedef union LVTEnt LVTEnt;
 
 union LVTEnt {
@@ -58,4 +60,5 @@ int have_apic(void);
 void enable_local_apic(void);
 uint32_t get_local_apic_id(void);
 
+#endif
 #endif
