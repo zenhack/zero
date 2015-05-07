@@ -12,4 +12,7 @@ void remap_8259pic(void);
 /* Turn off the PIC. Must call remap first. */
 void disable_8259pic(void);
 
+/* Send an end-of-interrupt command for the given IRQ. */
+void send_8259pic_EOI(int irq);
+
 #endif

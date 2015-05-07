@@ -29,3 +29,10 @@ void disable_8259pic(void) {
 	out8(PIC_DATA(PIC_MASTER), 0xff);
 	out8(PIC_DATA(PIC_SLAVE), 0xff);
 }
+
+void send_8259pic_EOI(int irq) {
+	if(irq >= 8) {
+		out8(PIC_CMD(PIC_SLAVE), PIC_EOI);
+	}
+	out8(PIC_CMD(PIC_MASTER), PIC_EOI);
+}
