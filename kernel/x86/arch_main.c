@@ -15,11 +15,12 @@
 #include <kernel/x86/paging.h>
 #include <kernel/x86/hlt.h>
 #include <kernel/x86/8259pic.h>
-
+#include <kernel/x86/pit.h>
 #include <kernel/x86/apic_timer.h>
 
 void timer_interrupt(Regs *regs) {
 	printf("Timer interrupt!\n");
+	send_8259pic_EOI(0);
 }
 
 /* defined in link.ld; located at the end of the kernel image. */
@@ -59,7 +60,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
 	
 	remap_8259pic();
-	disable_8259pic();
+//	disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
 	}
@@ -67,12 +68,14 @@ void arch_main(MultiBootInfo *mb_info) {
 	enable_local_apic();
 	printf("Local Apic ID #%d is online.\n", local_apic_id);
 
-	register_int_handler(255, timer_interrupt);
-	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
-	apic_timer_set(200);
-
+//	register_int_handler(255, timer_interrupt);
+	register_int_handler(IRQ(0), timer_interrupt);
+//	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
+//	apic_timer_set(200);
 
 	paging_init(mb_info->mem_upper * KIBI);
+
+	pit_init(1024);
 
 	asm volatile("sti");
 
