@@ -33,6 +33,9 @@ objdir="$PWD"
 [ "$platform" != port ] && [ -d "$srcdir/kernel/$platform" ] || \
 	errf '%s is not a valid platform.' "$platform"
 
+(cd "$srcdir"; find * -type d) | \
+	xargs -n 1 mkdir -p
+
 tool_prefix=${tool_prefix:-`guess_tool_prefix $platform`}
 # tool suffix is the empty string unless otherwise specified.
 

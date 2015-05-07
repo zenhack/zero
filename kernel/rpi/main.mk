@@ -1,6 +1,21 @@
-all: $(objdir)/kernel.rpi.bin
+all: kernel.rpi.bin
 
-$(objdir)/kernel.rpi.bin: $(objdir)/kernel.rpi.elf
+kernel.rpi.bin: kernel.rpi.elf
 	$(OBJCOPY) $< -O binary $@
 
-cleanfiles = $(objdir)/kernel.rpi.bin
+ssrc += \
+	kernel/rpi/boot.S\
+	kernel/rpi/sleep.S
+
+
+csrc += \
+	kernel/rpi/act_led.c\
+	kernel/rpi/arch_main.c\
+	kernel/rpi/gpio.c\
+	kernel/rpi/morse.c\
+	kernel/rpi/morse_led.c\
+	kernel/rpi/uart.c
+
+cleanfiles = kernel.rpi.bin
+
+.PHONY: all

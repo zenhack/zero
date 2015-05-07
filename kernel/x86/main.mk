@@ -1,4 +1,28 @@
-all: $(objdir)/kernel.x86.elf
+all: kernel.x86.elf
+
+ssrc += \
+	kernel/x86/boot.S\
+	kernel/x86/cothread_asm.S\
+	kernel/x86/cpuid.S\
+	kernel/x86/gdt_load.S\
+	kernel/x86/isr_stub.S\
+	kernel/x86/lidt.S\
+	kernel/x86/paging_asm.S
+
+csrc += \
+	kernel/x86/8259pic.c\
+	kernel/x86/apic.c\
+	kernel/x86/apic_timer.c\
+	kernel/x86/arch_main.c\
+	kernel/x86/cothread.c\
+	kernel/x86/gdt.c\
+	kernel/x86/idt.c\
+	kernel/x86/isr.c\
+	kernel/x86/paging.c\
+	kernel/x86/panic.c\
+	kernel/x86/pit.c\
+	kernel/x86/serial.c\
+	kernel/x86/text_console.c
 
 # Boot the kernel in qemu:
 qemu-run: all
@@ -6,3 +30,5 @@ qemu-run: all
 # Same thing, but wait for gdb to attach:
 qemu-gdb: all
 	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio -s -S
+
+.PHONY: all qemu-run qemu-gdb

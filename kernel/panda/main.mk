@@ -1,7 +1,14 @@
-all: $(objdir)/MLO
+all: MLO
 
-$(objdir)/MLO: $(objdir)/kernel.panda.elf
+MLO: kernel.panda.elf
 	$(OBJCOPY) $< -O binary $@
 	$(srcdir)/kernel/panda/scripts/patch-size
 
-cleanfiles = $(objdir)/MLO
+ssrc += \
+	kernel/panda/boot.S
+
+csrc += \
+	kernel/panda/arch_main.c\
+	kernel/panda/uart.c
+
+cleanfiles = MLO
