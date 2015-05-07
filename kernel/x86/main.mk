@@ -17,12 +17,16 @@ csrc += \
 	kernel/x86/cothread.c\
 	kernel/x86/gdt.c\
 	kernel/x86/idt.c\
-	kernel/x86/isr.c\
 	kernel/x86/paging.c\
 	kernel/x86/panic.c\
 	kernel/x86/pit.c\
 	kernel/x86/serial.c\
-	kernel/x86/text_console.c
+	kernel/x86/text_console.c\
+	\
+	kernel/x86/isr_gen.c
+
+kernel/x86/isr_gen.c: kernel/x86/make_isrs.sh
+	$< > $@
 
 # Boot the kernel in qemu:
 qemu-run: all
