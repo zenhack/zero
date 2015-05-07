@@ -58,6 +58,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	 * kernel and mem_upper. */
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
 	
+	remap_8259pic();
 	disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
