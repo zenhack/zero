@@ -1,6 +1,8 @@
 #ifndef KERNEL_X86_REGS_H
 #define KERNEL_X86_REGS_H
 
+#include <stdint.h>
+
 typedef struct Regs Regs;
 
 struct Regs {
