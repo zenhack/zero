@@ -36,3 +36,7 @@ void send_8259pic_EOI(int irq) {
 	}
 	out8(PIC_CMD(PIC_MASTER), PIC_EOI);
 }
+
+void ignore_8259pic_irq(Regs *regs) {
+	send_8259pic_EOI(regs->int_no - IRQ(0));
+}

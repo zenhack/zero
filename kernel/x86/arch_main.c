@@ -32,6 +32,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	MuxWriter mux_writer;
 	uint32_t local_apic_id;
 	MultiBootInfo my_mb_info;
+	int i;
 
 	/* We're going to start touching memory before too long, and we don't
 	 * actually know where this struct is. let's get our own copy and use
@@ -60,6 +61,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
 	
 	remap_8259pic();
+	for(i = 0; i < 16; i++) {
+		register_int_handler(IRQ(i), ignore_8259pic_irq);
+	}
 //	disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
