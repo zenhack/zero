@@ -11,16 +11,26 @@
 #include <kernel/x86/cpuid.h>
 #include <kernel/x86/apic.h>
 #include <kernel/x86/text_console.h>
-#include <kernel/x86/cothread.h>
 #include <kernel/x86/paging.h>
 #include <kernel/x86/hlt.h>
 #include <kernel/x86/8259pic.h>
 #include <kernel/x86/pit.h>
 #include <kernel/x86/apic_timer.h>
+#include <kernel/x86/sched.h>
+#include <kernel/x86/thread.h>
 
 void timer_interrupt(Regs *regs) {
-	printf("Timer interrupt!\n");
+	printf("Before Sched\n");
+	sched(regs);
+	printf("After Sched\n");
 	send_8259pic_EOI(0);
+}
+
+void example_thread(void *data) {
+	char *msg = (char *)data;
+	while(1) {
+		printf("%s\n", msg);
+	}
 }
 
 /* defined in link.ld; located at the end of the kernel image. */
@@ -76,6 +86,12 @@ void arch_main(MultiBootInfo *mb_info) {
 	register_int_handler(IRQ(0), timer_interrupt);
 //	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
 //	apic_timer_set(200);
+
+	Thread *threadA = mk_thread(8 * KIBI, example_thread, "A");
+	Thread *threadB = mk_thread(8 * KIBI, example_thread, "B");
+
+	sched_insert(threadA);
+	sched_insert(threadB);
 
 	paging_init(mb_info->mem_upper * KIBI);
 

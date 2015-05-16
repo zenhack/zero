@@ -2,7 +2,6 @@ all: kernel.x86.elf
 
 ssrc += \
 	kernel/x86/boot.S\
-	kernel/x86/cothread_asm.S\
 	kernel/x86/cpuid.S\
 	kernel/x86/gdt_load.S\
 	kernel/x86/isr_stub.S\
@@ -14,14 +13,15 @@ csrc += \
 	kernel/x86/apic.c\
 	kernel/x86/apic_timer.c\
 	kernel/x86/arch_main.c\
-	kernel/x86/cothread.c\
 	kernel/x86/gdt.c\
 	kernel/x86/idt.c\
 	kernel/x86/paging.c\
 	kernel/x86/panic.c\
 	kernel/x86/pit.c\
+	kernel/x86/sched.c\
 	kernel/x86/serial.c\
 	kernel/x86/text_console.c\
+	kernel/x86/thread.c\
 	\
 	kernel/x86/isr_gen.c
 
