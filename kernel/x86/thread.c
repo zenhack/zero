@@ -18,5 +18,7 @@ Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	stack[0] = (uint32_t)data;
 	stack[1] = 0; /* This is the ret address, but threads should *never* return. */
 	ret->regs.ds = SEGOFF(KDATA_SEGMENT);
+	ret->regs.ss = SEGOFF(KDATA_SEGMENT);
+	ret->regs.cs = SEGOFF(KCODE_SEGMENT);
 	return ret;
 }
