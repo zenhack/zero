@@ -29,5 +29,11 @@ void sched(Regs *regs) {
 		sched_insert(running);
 	}
 	running = sched_remove();
+	if(running->regs.eflags == 0) {
+		/* thread hasn't been scheduled before. Copy a few values
+		 * from previous context: */
+		running->regs.eflags = regs->eflags;
+		running->regs.esp = regs->esp;
+	}
 	*regs = running->regs;
 }
