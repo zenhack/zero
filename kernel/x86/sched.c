@@ -2,7 +2,7 @@
 #include <kernel/x86/thread.h>
 
 static Thread *head, *tail;
-static int started = 0;
+static Thread *running;
 
 void sched_insert(Thread *thread) {
 	thread->next = NULL;
@@ -13,19 +13,21 @@ void sched_insert(Thread *thread) {
 	}
 }
 
-void sched(Regs *regs) {
-	Thread *old;
-	if(!started) {
-		head->regs = *regs;
-
-		old = head;
-		head = head->next;
-
-		old->next = NULL;
-		tail->next = old;
-		tail = old;
-		started = 1;
+Thread *sched_remove(void) {
+	Thread *ret = head;
+	head = head->next;
+	if(head == NULL) {
+		tail = NULL;
 	}
+	ret->next = NULL;
+	return ret;
+}
 
-	*regs = head->regs;
+void sched(Regs *regs) {
+	if(running != NULL) {
+		running->regs = *regs;
+		sched_insert(running);
+	}
+	running = sched_remove();
+	*regs = running->regs;
 }
