@@ -1,0 +1,8 @@
+== Unit Tests ==
+
+Zero has the beginnings of a *very* crude test suite. To run it, set up 
+your environment as described in `building.txt`, and execute `make 
+check`. The machinery for this is all defined in `kernel/port/main.mk`, 
+and the tests run in userspace on the host (The test are therefore 
+restricted to things that are machine-independent, and can run fine in 
+userspace). tests are defined in files called `test_*.c`
