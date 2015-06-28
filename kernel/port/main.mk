@@ -9,6 +9,8 @@ csrc += \
 tests += \
 	kernel/port/heap.test
 
+cleanfiles += $(tests)
+
 %.test: %.test_o
 	cc -o $@ $<
 %.test_o: test_%.c
