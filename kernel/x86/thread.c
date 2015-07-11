@@ -4,6 +4,8 @@
 #include <kernel/port/units.h>
 #include <kernel/port/panic.h>
 
+#include <kernel/port/string.h>
+
 Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	uint32_t *stack = kalloc_align(stack_size, 4 * KIBI);
 	Thread *ret = kalloc(sizeof(Thread));
@@ -12,6 +14,10 @@ Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 		if(ret) kfree(ret, sizeof(Thread));
 		return NULL;
 	}
+
+	//debugging
+	memset(stack, 0xac, stack_size);
+
 	stack = (uint32_t*)(((size_t)stack) + stack_size);
 	stack[-1] = 0; /* end of the ebp "linked list" for stack traces. */
 	stack[-2] = (uint32_t)data;
