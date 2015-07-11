@@ -22,7 +22,7 @@ Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	stack[-1] = 0; /* end of the ebp "linked list" for stack traces. */
 	stack[-2] = (uint32_t)data;
 	stack[-3] = 0; /* This is the ret address, but threads should *never* return. */
-	ret->regs.ebp = (uint32_t)&stack[-2];
+	ret->regs.ebp = (uint32_t)&stack[-1];
 	/* useresp is the stack pointer for the interrupted process;
 	 * esp is the stack pointer as saved mid-interrupt handler, and
 	 * thus *not* what we want to point at our new stack. */
