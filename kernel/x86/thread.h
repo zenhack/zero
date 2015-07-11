@@ -2,11 +2,12 @@
 #define KERNEL_X86_THREAD_H
 
 #include <stddef.h>
+#include <kernel/port/data.h>
 #include <kernel/x86/regs.h>
 
 typedef struct Thread Thread;
 struct Thread {
-	Thread *next;
+	List l;
 	Regs regs;
 };
 
