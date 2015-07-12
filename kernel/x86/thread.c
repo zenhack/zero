@@ -6,6 +6,10 @@
 
 #include <kernel/port/string.h>
 
+/* NOTE: at least for kernel threads, this is totally broken; useresp doesn't
+ * actually exist (and we're just using the existing stack), so we're junking
+ * whatever's there. */
+
 Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	uint32_t *stack = kalloc_align(stack_size, 4 * KIBI);
 	Thread *ret = kalloc(sizeof(Thread));
