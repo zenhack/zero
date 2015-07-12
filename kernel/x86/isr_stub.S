@@ -26,8 +26,12 @@ isr_stub:
 	cld
 	call int_handler_common
 
+	/* int_handler_common will have returned a pointer to a possibly
+	 * different set of interrupted state. We should restore to *that*
+	 * state. Point the stack at it: */
+	movl %eax, %esp
+
 	/* clean up the stack and restore the old data segment. */
-	popl %eax
 	popl %eax
 	movw %ax, %ds
 	movw %ax, %es

@@ -64,12 +64,13 @@ void idt_init(void) {
 	lidt(&idt_desc);
 }
 
-void int_handler_common(Regs *regs) {
+Regs *int_handler_common(Regs *regs) {
 	int_handler h = handlers[regs->int_no];
 	if(h) {
-		h(regs);
+		regs = h(regs);
 	} else {
 		printf("Unhandled interrupt #: %d\n", regs->int_no);
 		panic("Unhandled Interrupt!");
 	}
+	return regs;
 }

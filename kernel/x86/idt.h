@@ -5,7 +5,7 @@
 
 #define NUM_IDT 256
 
-typedef void (*int_handler)(Regs *);
+typedef Regs *(*int_handler)(Regs *);
 
 void register_int_handler(uint8_t num, int_handler h);
 

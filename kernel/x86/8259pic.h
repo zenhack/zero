@@ -18,6 +18,6 @@ void disable_8259pic(void);
 void send_8259pic_EOI(int irq);
 
 /* dummy interrupt handler which just ignores the irq. */
-void ignore_8259pic_irq(Regs *regs);
+Regs *ignore_8259pic_irq(Regs *regs);
 
 #endif

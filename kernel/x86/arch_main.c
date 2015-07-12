@@ -19,11 +19,12 @@
 #include <kernel/x86/sched.h>
 #include <kernel/x86/thread.h>
 
-void timer_interrupt(Regs *regs) {
+Regs *timer_interrupt(Regs *regs) {
 	printf("Before Sched\n");
 	sched(regs);
 	printf("After Sched\n");
 	send_8259pic_EOI(0);
+	return regs;
 }
 
 void example_thread(void *data) {
