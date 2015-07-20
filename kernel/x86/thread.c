@@ -6,6 +6,11 @@
 
 #include <kernel/port/string.h>
 
+/* See [intel/1/3.4.3] */
+#define EFLAGS_ALWAYS1 (1<<1)
+#define EFLAGS_IF (1<<9)
+
+
 typedef struct NewStack NewStack;
 struct NewStack {
 	Regs saved_ctx;
@@ -41,10 +46,10 @@ Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 
 	stack_begin->saved_ctx.eip = (uint32_t)entry;
 	stack_begin->saved_ctx.cs = SEGOFF(KCODE_SEGMENT);
-	/* This is the on-boot value of the eflags register [intel/3/3.4.3]. We
-	 * haven't done anything to modify it, so let's give new threads the
-	 * same value: */
-	stack_begin->saved_ctx.eflags = 0x2;
+	/* The on-boot value of eflags just has the one reserved bit set. The
+	 * only modification we've made is to enable interrupts
+	 * [intel/1/3.4.3]: */
+	stack_begin->saved_ctx.eflags = EFLAGS_ALWAYS1 | EFLAGS_IF;
 	stack_begin->thread_ret = 0;
 	stack_begin->thread_arg = (uint32_t)data;
 	stack_begin->ebp_terminator = 0;
