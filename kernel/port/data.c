@@ -8,6 +8,7 @@ void enq(Queue *q, List *item) {
 		q->tail = item;
 	} else {
 		q->tail->next = item;
+		q->tail = item;
 	}
 }
 
