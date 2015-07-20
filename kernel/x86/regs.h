@@ -5,7 +5,8 @@
 
 typedef struct Regs Regs;
 
-/* Saved state upon entering an interrupt handler */
+/* Saved state upon entering an interrupt handler. Note that this is only valid
+ * for things interrupted in kernel mode; user mode has a few extra fields */
 struct Regs {
 	uint32_t ds;
 	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
@@ -17,10 +18,6 @@ struct Regs {
 
 	/* everything from here down is pushed by the CPU. */
 	uint32_t eip, cs, eflags;
-
-	/* These two only exist if the interrupted task was running in user
-	 * mode. Otherwise, we're running on the same stack. */
-	uint32_t useresp, ss;
 }__attribute__((packed));
 
 #endif

@@ -10,7 +10,7 @@ isr_stub:
 	/* save the old data segment */
 	movw %ds, %ax
 	pushl %eax
-	
+
 	/* load the kernel data segment: */
 	movw $SEGOFF(KDATA_SEGMENT), %ax
 	movw %ax, %ds
@@ -47,6 +47,6 @@ isr_stub:
 	 * Note that we need to insert some conditional logic here to avoid this
 	 * for interrupts that shouldn't have it. These include "those delivered
 	 * with the NMI, SMI, INIT, ExtINT, the start-up, or INIT-Deassert
-	 * delivery mode" [intel/3/10.8.5] */ 
+	 * delivery mode" [intel/3/10.8.5] */
 	movl %eax, EOI
 	iret

@@ -6,41 +6,52 @@
 
 #include <kernel/port/string.h>
 
-/* NOTE: at least for kernel threads, this is totally broken; useresp doesn't
- * actually exist (and we're just using the existing stack), so we're junking
- * whatever's there. */
+typedef struct NewStack NewStack;
+struct NewStack {
+	uint32_t int_handler_ret;
+	uint32_t int_handler_arg;
+	Regs saved_ctx;
+	uint32_t thread_ret;
+	uint32_t thread_arg;
+	uint32_t ebp_terminator;
+};
+
 
 Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
-	uint32_t *stack = kalloc_align(stack_size, 4 * KIBI);
+	/* Below we construct a stack that looks like it's running in an
+	 * interrupt handler, about to call int_handler_common, having been
+	 * interrupted right after the call instruction invoking entry(data).
+	 */
+
+	void *stack = kalloc_align(stack_size, 4 * KIBI);
 	Thread *ret = kalloc(sizeof(Thread));
-	if(!stack || !ret) {
-		if(stack) kfree(stack, stack_size);
-		if(ret) kfree(ret, sizeof(Thread));
-		return NULL;
-	}
 
 	//debugging
-	memset(stack, 0xac, stack_size);
+	memset(stack, 0x12, stack_size);
 
-	stack = (uint32_t*)(((size_t)stack) + stack_size);
-	stack[-1] = 0; /* end of the ebp "linked list" for stack traces. */
-	stack[-2] = (uint32_t)data;
-	stack[-3] = 0; /* This is the ret address, but threads should *never* return. */
-	ret->regs.ebp = (uint32_t)&stack[-1];
-	/* useresp is the stack pointer for the interrupted process;
-	 * esp is the stack pointer as saved mid-interrupt handler, and
-	 * thus *not* what we want to point at our new stack. */
-	ret->regs.useresp = (uint32_t)&stack[-4];
+	NewStack *stack_begin = (NewStack *)((size_t)stack - stack_size);
 
-	ret->regs.eip = (uint32_t)entry;
-	ret->regs.ds = SEGOFF(KDATA_SEGMENT);
-	ret->regs.ss = SEGOFF(KDATA_SEGMENT);
-	ret->regs.cs = SEGOFF(KCODE_SEGMENT);
+	stack_begin->saved_ctx.ds = SEGOFF(KDATA_SEGMENT);
+	stack_begin->saved_ctx.ebp = (uint32_t)&stack_begin->ebp_terminator;
+	/* We execute a pusha in isr_stub to save this; it would have been
+	 * previously pointing at the thing beneath all the regs: */
+	stack_begin->saved_ctx.esp = (uint32_t)&stack_begin->saved_ctx.int_no;
+	/* put some pneumonic values here; we shouldn't rely on these after
+	 * having returned from the interrupt handler: */
+	stack_begin->saved_ctx.int_no = 0xbad1bad1;
+	stack_begin->saved_ctx.error_code = 0xec0de000;
 
-	/* The first time we're scheduled, the scheduler will fill these
-	 * in for us, but we need to clearly mark them as uninitialized: */
-	ret->regs.esp = 0;
-	ret->regs.eflags = 0;
+	stack_begin->saved_ctx.eip = (uint32_t)entry;
+	stack_begin->saved_ctx.cs = SEGOFF(KCODE_SEGMENT);
+	/* This is the on-boot value of the eflags register [intel/3/3.4.3]. We
+	 * haven't done anything to modify it, so let's give new threads the
+	 * same value: */
+	stack_begin->saved_ctx.eflags = 0x2;
+	stack_begin->thread_ret = 0;
+	stack_begin->thread_arg = (uint32_t)data;
+	stack_begin->ebp_terminator = 0;
 
+	ret->ctx = &stack_begin->saved_ctx;
+	ret->stack_end = stack;
 	return ret;
 }

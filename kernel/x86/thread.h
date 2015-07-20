@@ -8,7 +8,8 @@
 typedef struct Thread Thread;
 struct Thread {
 	List l;
-	Regs regs;
+	Regs *ctx;
+	void *stack_end;
 };
 
 Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data);

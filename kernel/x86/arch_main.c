@@ -19,12 +19,13 @@
 #include <kernel/x86/sched.h>
 #include <kernel/x86/thread.h>
 
-Regs *timer_interrupt(Regs *regs) {
+Regs *timer_interrupt(Regs *old_ctx) {
+	Regs *new_ctx;
 	printf("Before Sched\n");
-	sched(regs);
+	new_ctx = sched(old_ctx);
 	printf("After Sched\n");
 	send_8259pic_EOI(0);
-	return regs;
+	return new_ctx;
 }
 
 void example_thread(void *data) {
@@ -70,7 +71,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	/* initialize the heap, using the chunk of memory between the
 	 * kernel and mem_upper. */
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
-	
+
 	remap_8259pic();
 	for(i = 0; i < 16; i++) {
 		register_int_handler(IRQ(i), ignore_8259pic_irq);
