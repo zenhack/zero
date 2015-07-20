@@ -8,8 +8,6 @@
 
 typedef struct NewStack NewStack;
 struct NewStack {
-	uint32_t int_handler_ret;
-	uint32_t int_handler_arg;
 	Regs saved_ctx;
 	uint32_t thread_ret;
 	uint32_t thread_arg;
