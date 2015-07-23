@@ -21,9 +21,9 @@
 
 Regs *timer_interrupt(Regs *old_ctx) {
 	Regs *new_ctx;
-	printf("Before Sched\n");
+//	printf("Before Sched\n");
 	new_ctx = sched(old_ctx);
-	printf("After Sched\n");
+//	printf("After Sched\n");
 	send_8259pic_EOI(0);
 	return new_ctx;
 }
@@ -101,5 +101,8 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	asm volatile("sti");
 
-	while(1) hlt();
+	while(1) {
+		printf("idle");
+//		hlt();
+	}
 }
