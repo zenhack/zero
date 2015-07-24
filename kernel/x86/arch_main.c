@@ -24,23 +24,17 @@ uint32_t pit_ticks, apic_ticks;
 
 static Regs *pit_calibrate_apic(Regs *old_ctx) {
 	pit_ticks++;
-	if(pit_ticks >= 100) {
-		printf("%d PIT ticks and %d APIC ticks.\n", pit_ticks, apic_ticks);
-	}
 	send_8259pic_EOI(0);
 	return old_ctx;
 }
 
 static Regs *apic_calibrate_apic(Regs *old_ctx) {
 	apic_ticks++;
-	printf("APIC interrupt. Ticks: %d\n", apic_ticks);
 	return old_ctx;
 }
 
-Regs *timer_interrupt(Regs *old_ctx) {
-	Regs *new_ctx = (Regs *)sched((void *)old_ctx);
-//	send_8259pic_EOI(0);
-	return new_ctx;
+static Regs *apic_timer_sched(Regs *old_ctx) {
+	return (Regs *)sched((void *)old_ctx);
 }
 
 void example_thread(void *data) {
@@ -91,7 +85,6 @@ void arch_main(MultiBootInfo *mb_info) {
 	for(i = 0; i < 16; i++) {
 		register_int_handler(IRQ(i), ignore_8259pic_irq);
 	}
-	//disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
 	}
@@ -101,19 +94,49 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	register_int_handler(255, apic_calibrate_apic);
 	register_int_handler(IRQ(0), pit_calibrate_apic);
-	apic_timer_init(255, 6, APIC_TIMER_PERIODIC);
+	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
+
+	paging_init(mb_info->mem_upper * KIBI);
+
+	printf("Measuring APIC timer frequency...\n");
+	apic_timer_set(1024);
+	pit_init(1024);
+
+	asm volatile("sti");
+
+	while(1) {
+		hlt();
+		if(pit_ticks >= 100) {
+			asm volatile("cli");
+			break;
+		}
+	}
+
+	uint32_t new_init_count = (1024 * pit_ticks) / apic_ticks;
+
+	printf(
+		"  APIC ticks: %d\n"
+		"  PIT ticks: %d\n"
+		"  ratio: %d\n"
+		"  new apic_start: %d\n",
+
+		pit_ticks,
+		apic_ticks,
+		apic_ticks/pit_ticks,
+		new_init_count
+	);
+
+	apic_timer_set(new_init_count);
+	register_int_handler(IRQ(0), ignore_8259pic_irq);
+	register_int_handler(255, apic_timer_sched);
+
+	disable_8259pic();
 
 	X86Thread *threadA = mk_thread(8 * KIBI, example_thread, "A");
 	X86Thread *threadB = mk_thread(8 * KIBI, example_thread, "B");
 
 	sched_insert((Thread *)threadA);
 	sched_insert((Thread *)threadB);
-
-	paging_init(mb_info->mem_upper * KIBI);
-
-	printf("Measuring APIC timer frequency\n");
-	apic_timer_set(1024);
-	pit_init(1024);
 
 	asm volatile("sti");
 
