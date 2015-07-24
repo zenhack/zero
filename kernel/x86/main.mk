@@ -18,7 +18,6 @@ csrc += \
 	kernel/x86/paging.c\
 	kernel/x86/panic.c\
 	kernel/x86/pit.c\
-	kernel/x86/sched.c\
 	kernel/x86/serial.c\
 	kernel/x86/text_console.c\
 	kernel/x86/thread.c\

@@ -1,5 +1,5 @@
-#include <kernel/x86/sched.h>
-#include <kernel/x86/thread.h>
+#include <stddef.h>
+#include <kernel/port/sched.h>
 
 static Queue ready;
 static Thread k_idle;
@@ -9,7 +9,7 @@ void sched_insert(Thread *t) {
 	enq(&ready, (List *)t);
 }
 
-Regs *sched(Regs *old_ctx) {
+void *sched(void *old_ctx) {
 	running->ctx = old_ctx;
 	if(running != &k_idle) {
 		enq(&ready, (List *)running);

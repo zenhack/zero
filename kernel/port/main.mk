@@ -5,4 +5,5 @@ csrc += \
 	kernel/port/muxwriter.c\
 	kernel/port/panic.c\
 	kernel/port/stdio.c\
-	kernel/port/string.c
+	kernel/port/string.c\
+	kernel/port/sched.c

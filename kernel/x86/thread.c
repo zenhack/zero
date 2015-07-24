@@ -20,14 +20,14 @@ struct NewStack {
 };
 
 
-Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
+X86Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	/* Below we construct a stack that looks like it's running in an
 	 * interrupt handler, about to call int_handler_common, having been
 	 * interrupted right after the call instruction invoking entry(data).
 	 */
 
 	void *stack = kalloc_align(stack_size, 4 * KIBI);
-	Thread *ret = kalloc(sizeof(Thread));
+	X86Thread *ret = kalloc(sizeof(X86Thread));
 
 	//debugging
 	memset(stack, 0x12, stack_size);
