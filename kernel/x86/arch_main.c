@@ -19,8 +19,26 @@
 #include <kernel/port/sched.h>
 #include <kernel/x86/thread.h>
 
+
+uint32_t pit_ticks, apic_ticks;
+
+static Regs *pit_calibrate_apic(Regs *old_ctx) {
+	pit_ticks++;
+	if(pit_ticks >= 100) {
+		printf("%d PIT ticks and %d APIC ticks.\n", pit_ticks, apic_ticks);
+	}
+	send_8259pic_EOI(0);
+	return old_ctx;
+}
+
+static Regs *apic_calibrate_apic(Regs *old_ctx) {
+	apic_ticks++;
+	printf("APIC interrupt. Ticks: %d\n", apic_ticks);
+	return old_ctx;
+}
+
 Regs *timer_interrupt(Regs *old_ctx) {
-	Regs *new_ctx new_ctx = (Regs *)sched((void *)old_ctx);
+	Regs *new_ctx = (Regs *)sched((void *)old_ctx);
 //	send_8259pic_EOI(0);
 	return new_ctx;
 }
@@ -73,7 +91,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	for(i = 0; i < 16; i++) {
 		register_int_handler(IRQ(i), ignore_8259pic_irq);
 	}
-	disable_8259pic();
+	//disable_8259pic();
 	if(!have_apic()) {
 		panic("No apic found!\n");
 	}
@@ -81,10 +99,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	enable_local_apic();
 	printf("Local Apic ID #%d is online.\n", local_apic_id);
 
-	register_int_handler(255, timer_interrupt);
-//	register_int_handler(IRQ(0), timer_interrupt);
-	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
-	apic_timer_set(200);
+	register_int_handler(255, apic_calibrate_apic);
+	register_int_handler(IRQ(0), pit_calibrate_apic);
+	apic_timer_init(255, 6, APIC_TIMER_PERIODIC);
 
 	X86Thread *threadA = mk_thread(8 * KIBI, example_thread, "A");
 	X86Thread *threadB = mk_thread(8 * KIBI, example_thread, "B");
@@ -94,12 +111,13 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	paging_init(mb_info->mem_upper * KIBI);
 
-//	pit_init(1024);
+	printf("Measuring APIC timer frequency\n");
+	apic_timer_set(1024);
+	pit_init(1024);
 
 	asm volatile("sti");
 
 	while(1) {
-		printf("idle");
-//		hlt();
+		hlt();
 	}
 }
