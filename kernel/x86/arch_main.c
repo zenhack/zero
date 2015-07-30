@@ -105,12 +105,12 @@ void arch_main(MultiBootInfo *mb_info) {
 	apic_timer_set(1024);
 	pit_init(1024);
 
-	asm volatile("sti");
+	sti();
 
 	while(1) {
 		hlt();
 		if(pit_ticks >= 100) {
-			asm volatile("cli");
+			cli();
 			break;
 		}
 	}
@@ -141,7 +141,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	sched_insert((Thread *)threadA);
 	sched_insert((Thread *)threadB);
 
-	asm volatile("sti");
+	sti();
 
 	while(1) {
 		hlt();
