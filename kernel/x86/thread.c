@@ -29,8 +29,10 @@ X86Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	void *stack = kalloc_align(stack_size, 4 * KIBI);
 	X86Thread *ret = kalloc(sizeof(X86Thread));
 
-	//debugging
-	memset(stack, 0x12, stack_size);
+	/* 0xcc is a breakpoint instruction (int $3). If we accidently jump into
+	 * the stack (yay memory saftey :\), this will increase the probability
+	 * that we hear about it early. */
+	memset(stack, 0xcc, stack_size);
 
 	NewStack *stack_begin = (NewStack *)((size_t)stack - stack_size);
 
