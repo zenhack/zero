@@ -106,14 +106,8 @@ void arch_main(MultiBootInfo *mb_info) {
 	pit_init(1024);
 
 	sti();
-
-	while(1) {
-		hlt();
-		if(pit_ticks >= 100) {
-			cli();
-			break;
-		}
-	}
+	while(pit_ticks < 100) { hlt(); }
+	cli();
 
 	uint32_t new_init_count = (1024 * pit_ticks) / apic_ticks;
 
