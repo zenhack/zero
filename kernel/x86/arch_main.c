@@ -20,7 +20,10 @@
 #include <kernel/x86/thread.h>
 
 
-uint32_t pit_ticks, apic_ticks;
+/* If we don't put volatile on these, the loop that checks if they've hit
+ * appropriate values may be optimized to cache them in registers, which
+ * obviously doesn't work. */
+volatile uint32_t pit_ticks, apic_ticks;
 
 static Regs *pit_calibrate_apic(Regs *old_ctx) {
 	pit_ticks++;
