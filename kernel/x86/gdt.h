@@ -9,7 +9,9 @@
 
 #ifndef ASM_FILE
 
-void gdt_init(void);
+typedef struct GDTDesc GDTDesc;
+extern GDTDesc gdt_desc;
+void gdt_load(GDTDesc *);
 
 #endif
 #endif

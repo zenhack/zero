@@ -64,7 +64,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	my_mb_info = *mb_info;
 	mb_info = &my_mb_info;
 
-	gdt_init();
+	gdt_load(&gdt_desc);
 
 	/* direct output to both the serial line and video console. */
 	serial_init(COM1, &com1);

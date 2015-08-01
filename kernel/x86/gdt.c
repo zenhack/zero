@@ -57,10 +57,3 @@ GDTDesc gdt_desc = {
 	.size = NUM_GDTENT * sizeof(GDTEnt) - 1,
 	.offset = (uint32_t)&gdt[0],
 };
-
-/* Actually loads the gdt. in gdt_load.S */
-extern void gdt_load(GDTDesc *desc);
-
-void gdt_init(void) {
-	gdt_load(&gdt_desc);
-}
