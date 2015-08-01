@@ -129,8 +129,8 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	disable_8259pic();
 
-	X86Thread *threadA = mk_thread(8 * KIBI, example_thread, "A");
-	X86Thread *threadB = mk_thread(8 * KIBI, example_thread, "B");
+	X86Thread *threadA = mk_thread(example_thread, "A");
+	X86Thread *threadB = mk_thread(example_thread, "B");
 
 	sched_insert((Thread *)threadA);
 	sched_insert((Thread *)threadB);

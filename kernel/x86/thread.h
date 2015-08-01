@@ -12,6 +12,6 @@ struct X86Thread {
 	void *stack_end;
 };
 
-X86Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data);
+X86Thread *mk_thread(void (*entry)(void *), void *data);
 
 #endif
