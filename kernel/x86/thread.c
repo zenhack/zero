@@ -34,7 +34,8 @@ X86Thread *mk_thread(size_t stack_size, void (*entry)(void *), void *data) {
 	 * that we hear about it early. */
 	memset(stack, 0xcc, stack_size);
 
-	NewStack *stack_begin = (NewStack *)((size_t)stack - stack_size);
+	NewStack *stack_begin = (NewStack *)((size_t)stack + stack_size);
+	stack_begin--;
 
 	stack_begin->saved_ctx.ds = SEGOFF(KDATA_SEGMENT);
 	stack_begin->saved_ctx.ebp = (uint32_t)&stack_begin->ebp_terminator;
