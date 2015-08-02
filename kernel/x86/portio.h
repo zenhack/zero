@@ -4,13 +4,13 @@
 #include <stdint.h>
 
 static inline void out8(uint16_t port, uint8_t data) {
-	asm volatile("outb %b[data], %w[port]"
+	__asm__ volatile("outb %b[data], %w[port]"
 		:: [data] "a" (data), [port] "Nd" (port));
 }
 
 static inline uint8_t in8(uint16_t port) {
 	uint8_t ret;
-	asm volatile("inb %w[port], %b[ret]"
+	__asm__ volatile("inb %w[port], %b[ret]"
 		: [ret] "=a" (ret)
 		: [port] "Nd" (port));
 	return ret;

@@ -6,6 +6,7 @@ DEBUG ?= -g
 OPT ?= -O2
 
 CFLAGS += \
+	-std=c11 \
 	-ffreestanding \
 	-nostdlib \
 	-Wall -Werror -Wextra -Wno-unused-parameter \
