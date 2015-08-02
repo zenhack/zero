@@ -44,7 +44,7 @@ struct GDTEnt {
 	uint8_t base_high;
 }__attribute__((packed));
 
-GDTEnt gdt[NUM_GDTENT] = {
+GDTEnt gdt[] = {
 	MKGDT(0, 0, 0, 0),
 	MKGDT(0, ~0,
 		ACCESS_PRESENT|ACCESS_PRIVL(0)|ACCESS_RW|ACCESS_EX,
@@ -54,6 +54,6 @@ GDTEnt gdt[NUM_GDTENT] = {
 		FLAG_GR_PAGE|FLAG_SZ_32),
 };
 GDTDesc gdt_desc = {
-	.size = NUM_GDTENT * sizeof(GDTEnt) - 1,
+	.size = sizeof gdt - 1,
 	.offset = (uint32_t)&gdt[0],
 };
