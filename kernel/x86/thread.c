@@ -27,6 +27,8 @@ struct NewStack {
 	NewStackBase base;
 };
 
+_Static_assert(sizeof(NewStack) == STACK_SIZE, "NewStack struct is the wrong size");
+
 
 X86Thread *mk_thread(void (*entry)(void *), void *data) {
 	/* Below we construct a stack that looks like it's running in an
