@@ -6,12 +6,14 @@
 /**
  * Macros for constructing bit masks.
  *
+ * When bitwise-anded with another value:
+ *
  * MASK_LO(n) masks out the lowest n bits.
  * MASK_HI(n) masks out all but the lowest n bits.
- * MASK_RANGE(lo, hi) masks out all of the bits on the interval [lo, hi] 
+ * MASK_RANGE(lo, hi) masks out all of the bits on the interval [lo, hi]
  * (inclusive).
  *
- * The KEEP_* macros produce masks that are the inverse of their MASK_* 
+ * The KEEP_* macros produce masks that are the inverse of their MASK_*
  * counterparts.
  */
 #define MASK_LO(bits) ((-1)<<(bits))
