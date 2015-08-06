@@ -3,6 +3,7 @@
 #include <kernel/port/units.h>
 #include <kernel/port/mmio.h>
 #include <kernel/rpi/mmio.h>
+#include <kernel/rpi/gpio.h>
 
 #include <stdint.h>
 
@@ -14,6 +15,9 @@
 
 #define IIR_CLEAR_RECV (1<<1)
 #define IIR_CLEAR_SEND (1<<2)
+
+#define TRANSMIT_PIN 14
+#define RECEIVE_PIN 15
 
 /* Set the baud rate. From [bcm2835] (sec 2.2.1), */
 
@@ -32,6 +36,9 @@ static uint32_t baud_reg_from_rate(uint32_t baudrate) {
 }
 
 void uart_init(void) {
+	gpio_fsel(TRANSMIT_PIN, GPIO_F_ALT0);
+	gpio_fsel(RECEIVE_PIN,  GPIO_F_ALT0);
+
 	/* Enable the UART. */
 	put32(AUX_ENABLES, KEEP_LO(3) & (get32(AUX_ENABLES) | UART_ENABLE));
 
