@@ -1,5 +1,6 @@
 #include <kernel/x86/text_console.h>
 #include <kernel/x86/portio.h>
+#include <kernel/x86/lock.h>
 
 #define VGA_CNTL 0x3d4
 #define VGA_DATA 0x3d5
@@ -11,6 +12,10 @@ static uint16_t cursor_x = 0;
 static uint16_t cursor_y = 0;
 
 static uint16_t *video_memory = (uint16_t*)0xb8000;
+
+/** video_lock must be held when writing to the video memory,
+ * or adjusting the cursor position. */
+static mutex_t video_lock;
 
 #define BLACK     0
 #define BLUE      1
@@ -69,6 +74,7 @@ static void scroll(void) {
 static size_t text_console_write(FILE *stream, void *buf, size_t len) {
 	char *s = (char*)buf;
 	size_t left = len;
+	wait_aquire(&video_lock);
 	while(left) {
 		switch(*s) {
 		case '\r':
@@ -101,6 +107,7 @@ static size_t text_console_write(FILE *stream, void *buf, size_t len) {
 		scroll();
 		update_hardware_cursor();
 	}
+	release(&video_lock);
 	return len - left;
 }
 
