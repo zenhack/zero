@@ -7,14 +7,6 @@ kernel/x86/serial.c is a polling-based serial driver. It would be nice to do
 something interrupt driven, especially now that we have a basic preemptive
 scheduler.
 
-## Build system does not account for dependencies on headers
-
-This hasn't been much of a problem so far, but now that we've put a few
-non-trivial things in headers (in particular, kernel/x86/lock.h), this
-is going to be a bit more dangerous.
-
-We can use the preprocessor's -M option to generate proper dependencies.
-
 # Closed
 
 ## kernel/x86/text_console.[ch] is not thread-safe
@@ -29,3 +21,12 @@ In the simple demo where you have two threads using it as stdout, you seem to
 get occasional extra spaces/newlines between their output, which makes some
 sense.
 
+## Build system does not account for dependencies on headers
+
+Resolution: Use preprocessor's -M to generate .deps.mk files
+
+This hasn't been much of a problem so far, but now that we've put a few
+non-trivial things in headers (in particular, kernel/x86/lock.h), this
+is going to be a bit more dangerous.
+
+We can use the preprocessor's -M option to generate proper dependencies.
