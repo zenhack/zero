@@ -1,7 +1,7 @@
 all: kernel.rpi.bin
 
 kernel.rpi.bin: kernel.rpi.elf
-	$(OBJCOPY) $< -O binary $@
+	@$(OBJCOPY) $< -O binary $@
 
 ssrc += \
 	kernel/rpi/boot.S\

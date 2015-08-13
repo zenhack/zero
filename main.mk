@@ -23,23 +23,29 @@ objects := $(ssrc:.S=.o) $(csrc:.c=.o)
 depfiles := $(objects:.o=.deps.mk)
 
 kernel.$(platform).elf: $(objects) $(linker_script)
-	$(LD) -o $@ $(objects) $(CFLAGS) $(LDFLAGS) $(LIBS) -T $(linker_script)
+	@echo LINK $@
+	@$(LD) -o $@ $(objects) $(CFLAGS) $(LDFLAGS) $(LIBS) -T $(linker_script)
 
 clean:
-	rm -f \
+	@echo CLEAN
+	@rm -f \
 		$(shell find * -name '*.o') \
 		kernel.*.elf \
 		$(depfiles) \
 		$(cleanfiles)
 
 %.o: %.S %.deps.mk
-	$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
+	@echo AS $<
+	@$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
 %.o: %.c %.deps.mk
-	$(CC) $(CFLAGS) -c -o $@ $<
+	@echo CC $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
 
 %.deps.mk: %.S
-	$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS) -DASM_FILE $< > $@
+	@echo DEPS $<
+	@$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS) -DASM_FILE $< > $@
 %.deps.mk: %.c
-	$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS)  $< > $@
+	@echo DEPS $<
+	@$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS)  $< > $@
 
 include $(depfiles)
