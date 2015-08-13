@@ -5,14 +5,18 @@ include $(srcdir)/kernel/port/main.mk
 DEBUG ?= -g
 OPT ?= -O2
 
-CFLAGS += \
+COMMON_CFLAGS += \
 	-std=c11 \
-	-ffreestanding \
-	-nostdlib \
 	-Wall -Werror -Wextra -Wno-unused-parameter \
 	-I $(srcdir) \
 	$(DEBUG) \
 	$(OPT)
+
+METAL_CFLAGS += \
+	-nostdlib \
+	-ffreestanding
+
+CFLAGS := $(COMMON_CFLAGS) $(METAL_CFLAGS)
 
 LIBS = -lgcc
 

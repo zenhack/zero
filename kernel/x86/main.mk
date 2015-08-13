@@ -37,4 +37,6 @@ qemu-run: all
 qemu-gdb: all
 	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio -s -S
 
+include $(srcdir)/kernel/x86/tests/main.mk
+
 .PHONY: all qemu-run qemu-gdb
