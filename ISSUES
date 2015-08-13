@@ -7,6 +7,15 @@ kernel/x86/serial.c is a polling-based serial driver. It would be nice to do
 something interrupt driven, especially now that we have a basic preemptive
 scheduler.
 
+## A way to include headers for portable interfaces that are implemented per-arch.
+
+Right now the x86 mutex implementation is all in headers, as static inline functions.
+This means we can't just have different .c files for each arch, so we need a way to
+directy the compiler to include the right file regardless of architecture.
+
+This is probably going to involve refactoring the build system and/or shuffling some
+files around.
+
 # Closed
 
 ## kernel/x86/text_console.[ch] is not thread-safe
