@@ -48,21 +48,27 @@ struct ApicICR {
 	/* interrupt command register [intel/3/10.6.1]. This is defined as two
 	 * separate 32-bit fields, since according to [intel/3/10.4.1], all apic
 	 * registers must be read/written in 32-bit chunks. */
-	struct {
-		uint32_t vector : 8;
-		uint32_t deliv_mode : 3;
-		uint32_t dest_mode : 1;
-		uint32_t deliv_status : 1;
-		uint32_t reserved_0 : 1;
-		uint32_t level : 1;
-		uint32_t trigger_mode : 1;
-		uint32_t reserved_1 : 2;
-		uint32_t dest_shorthand : 2;
-		uint32_t reserved_2 : 12;
+	union {
+		struct {
+			uint32_t vector : 8;
+			uint32_t deliv_mode : 3;
+			uint32_t dest_mode : 1;
+			uint32_t deliv_status : 1;
+			uint32_t reserved_0 : 1;
+			uint32_t level : 1;
+			uint32_t trigger_mode : 1;
+			uint32_t reserved_1 : 2;
+			uint32_t dest_shorthand : 2;
+			uint32_t reserved_2 : 12;
+		};
+		uint32_t raw;
 	} lo;
-	struct {
-		uint32_t reserved_3 : 24;
-		uint32_t dest : 8;
+	union {
+		struct {
+			uint32_t reserved_3 : 24;
+			uint32_t dest : 8;
+		};
+		uint32_t raw;
 	} hi;
 };
 

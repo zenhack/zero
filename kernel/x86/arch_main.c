@@ -19,6 +19,8 @@
 #include <kernel/port/sched.h>
 #include <kernel/x86/thread.h>
 
+#include <kernel/port/mmio.h>
+
 
 /* If we don't put volatile on these, the loop that checks if they've hit
  * appropriate values may be optimized to cache them in registers, which
@@ -45,6 +47,11 @@ void example_thread(void *data) {
 	while(1) {
 		printf("%s\n", msg);
 	}
+}
+
+static Regs *test_show_local_apic_id(Regs *old_ctx) {
+	printf("%d\n", get_local_apic_id());
+	return old_ctx;
 }
 
 /* defined in link.ld; located at the end of the kernel image. */
@@ -129,11 +136,21 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	disable_8259pic();
 
-	X86Thread *threadA = mk_thread(example_thread, "A");
-	X86Thread *threadB = mk_thread(example_thread, "B");
+//	X86Thread *threadA = mk_thread(example_thread, "A");
+//	X86Thread *threadB = mk_thread(example_thread, "B");
 
-	sched_insert((Thread *)threadA);
-	sched_insert((Thread *)threadB);
+//	sched_insert((Thread *)threadA);
+//	sched_insert((Thread *)threadB);
+
+	/** test sending IPIs: */
+	register_int_handler(254, test_show_local_apic_id);
+	ApicICR icr;
+	icr.lo.raw = get32(INT_COMMAND);
+
+	icr.lo.vector = 254;
+	icr.lo.dest_shorthand = IPI_DEST_ALL_BUT_SELF;
+	icr.lo.level = 1;
+	put32(INT_COMMAND, icr.lo.raw);
 
 	sti();
 
