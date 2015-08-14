@@ -1,0 +1,14 @@
+SubDir TOP kernel port ;
+
+port_src =
+	data.c
+	heap.c
+	mmio.c
+	muxwriter.c
+	panic.c
+	stdio.c
+	string.c
+	sched.c
+;
+
+port_obj = $(port_src:S=.o) ;

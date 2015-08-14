@@ -1,0 +1,42 @@
+SubDir TOP kernel x86 ;
+
+x86_src =
+	boot.S
+	cpuid.S
+	gdt_load.S
+	isr_stub.S
+	lidt.S
+	paging_asm.S
+
+	8259pic.c
+	apic.c
+	apic_timer.c
+	arch_main.c
+	gdt.c
+	idt.c
+	paging.c
+	panic.c
+	pit.c
+	serial.c
+	text_console.c
+	thread.c
+
+	isr_gen.c
+;
+
+x86_obj = $(x86_src:S=.o) ;
+
+Clean clean : isr.gen_c ;
+
+GenFile isr_gen.c : make_isrs.sh ;
+
+## Boot the kernel in qemu:
+#qemu-run: all
+#	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio
+## Same thing, but wait for gdb to attach:
+#qemu-gdb: all
+#	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio -s -S
+#
+#include $(srcdir)/kernel/x86/tests/main.mk
+#
+#.PHONY: all qemu-run qemu-gdb

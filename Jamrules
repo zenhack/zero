@@ -1,0 +1,27 @@
+TOP = . ;
+
+CCFLAGS =
+	-std=c11
+	-Wall -Werror -Wextra -Wno-unused-parameter
+	-nostdlib
+	-ffreestanding
+;
+
+HDRS = $(TOP) ;
+
+OPTIM = -O2 -g ;
+
+platform = x86 ;
+
+rule GenFile {
+	Depends $(1) : $(2) ;
+}
+
+actions GenFile {
+	$(2) > $(1)
+}
+
+rule UserObject { }
+actions UserObject {
+	$(CC) $(CCFLAGS) -c -o $(1) $(2)
+}

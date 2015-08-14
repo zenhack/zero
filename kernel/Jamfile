@@ -1,0 +1,11 @@
+SubDir TOP kernel ;
+
+SubInclude TOP kernel $(platform) ;
+SubInclude TOP kernel port ;
+
+MainFromObjects kernel.$(platform).elf :
+	$(port_obj)
+	$($(platform)_obj)
+;
+
+Echo objects: $(port_obj) $($(platform)_obj) ;
