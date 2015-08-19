@@ -1,5 +1,5 @@
-#ifndef KERNEL_X86_LOCK_H
-#define KERNEL_X86_LOCK_H
+#ifndef KERNEL_ARCH_LOCK_H
+#define KERNEL_ARCH_LOCK_H
 
 #include <kernel/x86/asm.h>
 #include <kernel/port/panic.h>

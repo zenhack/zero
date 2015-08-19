@@ -1,11 +1,6 @@
 #include <stddef.h>
 #include <kernel/port/sched.h>
-
-/* FIXME: We must *not* be including architecture specific headers from
- * portable souce files. The source tree/build system needs to be restructured
- * so that we can have architecture-specific implementations of portable
- * interfaces. */
-#include <kernel/x86/lock.h>
+#include <kernel/arch/lock.h>
 
 static Queue ready;
 static mutex_t ready_lock;

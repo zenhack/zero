@@ -1,4 +1,8 @@
 VPATH := $(srcdir)
+
+COMMON_CFLAGS :=
+METAL_CFLAGS :=
+
 include $(srcdir)/kernel/$(platform)/main.mk
 include $(srcdir)/kernel/port/main.mk
 
@@ -8,7 +12,6 @@ OPT ?= -O2
 COMMON_CFLAGS += \
 	-std=c11 \
 	-Wall -Werror -Wextra -Wno-unused-parameter \
-	-I $(srcdir) \
 	$(DEBUG) \
 	$(OPT)
 

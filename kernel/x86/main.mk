@@ -27,6 +27,9 @@ csrc += \
 cleanfiles += \
 	kernel/x86/isr_gen.c
 
+COMMON_CFLAGS += \
+	-I $(srcdir)/kernel/x86/include
+
 kernel/x86/isr_gen.c: kernel/x86/make_isrs.sh
 	$< > $@
 

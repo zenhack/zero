@@ -7,3 +7,6 @@ csrc += \
 	kernel/port/stdio.c\
 	kernel/port/string.c\
 	kernel/port/sched.c
+
+COMMON_CFLAGS += \
+	-I $(srcdir)/kernel/port/include
