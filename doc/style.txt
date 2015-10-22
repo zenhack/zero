@@ -36,7 +36,7 @@ Rule #1: do what the rest of the code does. Below are some conventions we've ado
 
 === Preprocessor ===
 
-* Avoid macros wherever possible (#defined constants are okay.)
+* Avoid macros wherever possible. Prefer enums to #defined constants.
 * #ifdefs are banned, except in header guards, and in headers for use
   with both assembly and C files, in which case any C code may be wrapped with
   #ifndef ASM_FILE ... #endif.

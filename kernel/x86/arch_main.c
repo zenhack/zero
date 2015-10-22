@@ -148,8 +148,8 @@ void arch_main(MultiBootInfo *mb_info) {
 	icr.lo.raw = get32(INT_COMMAND);
 
 	icr.lo.vector = 254;
-	icr.lo.dest_shorthand = IPI_DEST_ALL_BUT_SELF;
-	icr.lo.level = 1;
+	icr.lo.dest_shorthand = ICR_IPI_ALL_BUT_SELF;
+	icr.lo.level = ICR_ASSERT;
 	put32(INT_COMMAND, icr.lo.raw);
 
 	sti();

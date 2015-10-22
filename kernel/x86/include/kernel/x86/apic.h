@@ -29,9 +29,6 @@
 #define CURRENT_COUNT      0xfee00390
 #define DIVIDE_CONF        0xfee003e0
 
-/* IPI destination shorthands: */
-#define IPI_DEST_ALL_BUT_SELF 0x03
-
 #define IA32_APIC_BASE     0x1b
 
 /* flags for SPUR_INT_VEC */
@@ -43,6 +40,33 @@
 
 typedef struct ApicICR ApicICR;
 typedef union LVTEnt LVTEnt;
+
+/* destination shorthand */
+enum {
+	ICR_IPI_NO_SHORTHAND = 0,
+	ICR_IPI_SELF = 1,
+	ICR_IPI_ALL_PLUS_SELF = 2,
+	ICR_IPI_ALL_BUT_SELF = 3
+};
+
+
+/* delivery mode */
+enum {
+	ICR_DELIV_FIXED = 0,
+	ICR_DELIV_LOWEST_PRIORITY = 1,
+	ICR_DELIV_SMI = 2,
+/*	(reserved) = 3; */
+	ICR_DELIV_NMI = 4,
+	ICR_DELIV_INIT = 5,
+	ICR_DELIV_STARTUP = 5
+/*	(reserved) = 7 */
+};
+
+/* level */
+enum {
+	ICR_DEASSERT = 0,
+	ICR_ASSERT = 1
+};
 
 struct ApicICR {
 	/* interrupt command register [intel/3/10.6.1]. This is defined as two
