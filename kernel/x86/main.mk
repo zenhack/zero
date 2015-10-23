@@ -24,6 +24,7 @@ csrc += \
 	kernel/x86/serial.c\
 	kernel/x86/text_console.c\
 	kernel/x86/thread.c\
+	kernel/x86/mp_setup.c\
 	\
 	kernel/x86/isr_gen.c
 
