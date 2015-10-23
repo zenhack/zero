@@ -15,6 +15,7 @@ csrc += \
 	kernel/x86/arch_main.c\
 	kernel/x86/gdt.c\
 	kernel/x86/idt.c\
+	kernel/x86/stdio_setup.c\
 	kernel/x86/paging.c\
 	kernel/x86/panic.c\
 	kernel/x86/pit.c\
