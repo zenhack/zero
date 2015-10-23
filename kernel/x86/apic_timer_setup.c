@@ -7,6 +7,8 @@
 #include <kernel/x86/idt.h>
 #include <kernel/x86/pit.h>
 
+uint32_t apic_timer_frequency;
+
 /* If we don't put volatile on these, the loop that checks if they've hit
  * appropriate values may be optimized to cache them in registers, which
  * obviously doesn't work. */
@@ -27,7 +29,7 @@ static Regs *apic_timer_sched(Regs *old_ctx) {
 	return (Regs *)sched((void *)old_ctx);
 }
 
-void apic_timer_setup(void) {
+void apic_timer_setup(uint32_t frequency) {
 	int i;
 	remap_8259pic();
 	for(i = 0; i < 16; i++) {
@@ -38,14 +40,14 @@ void apic_timer_setup(void) {
 	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
 
 	printf("Measuring APIC timer frequency...\n");
-	apic_timer_set(1024);
-	pit_init(1024);
+	apic_timer_set(frequency);
+	pit_init(frequency);
 
 	sti();
 	while(pit_ticks < 100) { hlt(); }
 	cli();
 
-	uint32_t new_init_count = (1024 * pit_ticks) / apic_ticks;
+	uint32_t new_init_count = (frequency * pit_ticks) / apic_ticks;
 
 	printf(
 		"  APIC ticks: %d\n"
@@ -64,4 +66,5 @@ void apic_timer_setup(void) {
 	register_int_handler(255, apic_timer_sched);
 
 	disable_8259pic();
+	apic_timer_frequency = frequency;
 }

@@ -63,7 +63,7 @@ void arch_main(MultiBootInfo *mb_info) {
 	paging_init(mb_info->mem_upper * KIBI);
 
 	apic_setup();
-	apic_timer_setup();
+	apic_timer_setup(1024);
 
 //	X86Thread *threadA = mk_thread(example_thread, "A");
 //	X86Thread *threadB = mk_thread(example_thread, "B");
