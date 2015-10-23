@@ -56,8 +56,8 @@ void apic_timer_setup(uint32_t frequency) {
 		"  ratio: %d\n"
 		"  new apic_start: %d\n",
 
-		pit_ticks,
 		apic_ticks,
+		pit_ticks,
 		apic_ticks/pit_ticks,
 		new_init_count
 	);
