@@ -3,6 +3,7 @@
 #include <kernel/port/stdio.h>
 #include <kernel/x86/8259pic.h>
 #include <kernel/x86/apic_timer.h>
+#include <kernel/x86/apic_timer_setup.h>
 #include <kernel/x86/asm.h>
 #include <kernel/x86/idt.h>
 #include <kernel/x86/pit.h>
