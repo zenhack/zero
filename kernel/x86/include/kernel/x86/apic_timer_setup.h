@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define APIC_TIMER_INT_NO 255
+
 /* Initialize the apic timer with the given frequency.
  *
  * Before this function is called, the apic_setup() must have exectued.

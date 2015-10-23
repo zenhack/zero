@@ -36,9 +36,9 @@ void apic_timer_setup(uint32_t frequency) {
 	for(i = 0; i < 16; i++) {
 		register_int_handler(IRQ(i), ignore_8259pic_irq);
 	}
-	register_int_handler(255, apic_calibrate_apic);
+	register_int_handler(APIC_TIMER_INT_NO, apic_calibrate_apic);
 	register_int_handler(IRQ(0), pit_calibrate_apic);
-	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
+	apic_timer_init(APIC_TIMER_INT_NO, 7, APIC_TIMER_PERIODIC);
 
 	printf("Measuring APIC timer frequency...\n");
 	apic_timer_set(frequency);
@@ -64,7 +64,7 @@ void apic_timer_setup(uint32_t frequency) {
 
 	apic_timer_set(new_init_count);
 	register_int_handler(IRQ(0), ignore_8259pic_irq);
-	register_int_handler(255, apic_timer_sched);
+	register_int_handler(APIC_TIMER_INT_NO, apic_timer_sched);
 
 	disable_8259pic();
 	apic_timer_frequency = frequency;
