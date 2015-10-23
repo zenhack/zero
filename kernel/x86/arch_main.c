@@ -9,36 +9,17 @@
 #include <kernel/x86/idt.h>
 #include <kernel/x86/cpuid.h>
 #include <kernel/x86/apic.h>
+#include <kernel/x86/apic_setup.h>
 #include <kernel/x86/paging.h>
 #include <kernel/x86/asm.h>
 #include <kernel/x86/8259pic.h>
 #include <kernel/x86/pit.h>
-#include <kernel/x86/apic_timer.h>
+#include <kernel/x86/apic_timer_setup.h>
 #include <kernel/port/sched.h>
 #include <kernel/x86/thread.h>
 
 #include <kernel/port/mmio.h>
 
-
-/* If we don't put volatile on these, the loop that checks if they've hit
- * appropriate values may be optimized to cache them in registers, which
- * obviously doesn't work. */
-volatile uint32_t pit_ticks, apic_ticks;
-
-static Regs *pit_calibrate_apic(Regs *old_ctx) {
-	pit_ticks++;
-	send_8259pic_EOI(0);
-	return old_ctx;
-}
-
-static Regs *apic_calibrate_apic(Regs *old_ctx) {
-	apic_ticks++;
-	return old_ctx;
-}
-
-static Regs *apic_timer_sched(Regs *old_ctx) {
-	return (Regs *)sched((void *)old_ctx);
-}
 
 void example_thread(void *data) {
 	char *msg = (char *)data;
@@ -56,9 +37,7 @@ static Regs *test_show_local_apic_id(Regs *old_ctx) {
 extern void *kend;
 
 void arch_main(MultiBootInfo *mb_info) {
-	uint32_t local_apic_id;
 	MultiBootInfo my_mb_info;
-	int i;
 
 	/* We're going to start touching memory before too long, and we don't
 	 * actually know where this struct is. let's get our own copy and use
@@ -82,49 +61,8 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	paging_init(mb_info->mem_upper * KIBI);
 
-
-	remap_8259pic();
-	for(i = 0; i < 16; i++) {
-		register_int_handler(IRQ(i), ignore_8259pic_irq);
-	}
-	if(!have_apic()) {
-		panic("No apic found!\n");
-	}
-	local_apic_id = get_local_apic_id();
-	enable_local_apic();
-	printf("Local Apic ID #%d is online.\n", local_apic_id);
-
-	register_int_handler(255, apic_calibrate_apic);
-	register_int_handler(IRQ(0), pit_calibrate_apic);
-	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
-
-	printf("Measuring APIC timer frequency...\n");
-	apic_timer_set(1024);
-	pit_init(1024);
-
-	sti();
-	while(pit_ticks < 100) { hlt(); }
-	cli();
-
-	uint32_t new_init_count = (1024 * pit_ticks) / apic_ticks;
-
-	printf(
-		"  APIC ticks: %d\n"
-		"  PIT ticks: %d\n"
-		"  ratio: %d\n"
-		"  new apic_start: %d\n",
-
-		pit_ticks,
-		apic_ticks,
-		apic_ticks/pit_ticks,
-		new_init_count
-	);
-
-	apic_timer_set(new_init_count);
-	register_int_handler(IRQ(0), ignore_8259pic_irq);
-	register_int_handler(255, apic_timer_sched);
-
-	disable_8259pic();
+	apic_setup();
+	apic_timer_setup();
 
 //	X86Thread *threadA = mk_thread(example_thread, "A");
 //	X86Thread *threadB = mk_thread(example_thread, "B");

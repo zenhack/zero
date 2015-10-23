@@ -11,7 +11,9 @@ ssrc += \
 csrc += \
 	kernel/x86/8259pic.c\
 	kernel/x86/apic.c\
+	kernel/x86/apic_setup.c\
 	kernel/x86/apic_timer.c\
+	kernel/x86/apic_timer_setup.c\
 	kernel/x86/arch_main.c\
 	kernel/x86/gdt.c\
 	kernel/x86/idt.c\
