@@ -36,8 +36,9 @@ static Regs *test_show_local_apic_id(Regs *old_ctx) {
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
 
+MultiBootInfo my_mb_info;
+
 void arch_main(MultiBootInfo *mb_info) {
-	MultiBootInfo my_mb_info;
 
 	/* We're going to start touching memory before too long, and we don't
 	 * actually know where this struct is. let's get our own copy and use
