@@ -91,6 +91,9 @@ void arch_main(MultiBootInfo *mb_info) {
 	 * kernel and mem_upper. */
 	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
 
+	paging_init(mb_info->mem_upper * KIBI);
+
+
 	remap_8259pic();
 	for(i = 0; i < 16; i++) {
 		register_int_handler(IRQ(i), ignore_8259pic_irq);
@@ -105,8 +108,6 @@ void arch_main(MultiBootInfo *mb_info) {
 	register_int_handler(255, apic_calibrate_apic);
 	register_int_handler(IRQ(0), pit_calibrate_apic);
 	apic_timer_init(255, 7, APIC_TIMER_PERIODIC);
-
-	paging_init(mb_info->mem_upper * KIBI);
 
 	printf("Measuring APIC timer frequency...\n");
 	apic_timer_set(1024);
