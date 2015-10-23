@@ -147,8 +147,8 @@ void arch_main(MultiBootInfo *mb_info) {
 	ApicICR icr;
 	icr.lo.raw = get32(INT_COMMAND);
 
-	icr.lo.vector = 254;
 	icr.lo.dest_shorthand = ICR_IPI_ALL_BUT_SELF;
+	icr.lo.deliv_mode = ICR_DELIV_INIT;
 	icr.lo.level = ICR_ASSERT;
 	put32(INT_COMMAND, icr.lo.raw);
 
