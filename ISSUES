@@ -1,6 +1,11 @@
 
 # Open
 
+## Apic timer frequency isn't set correctly
+
+What should be a 10 millisecond delay is taking 1 or 2 seconds; the apic timer
+is clearly not being calibrated correctly.
+
 ## Interrupt driven serial driver on x86
 
 kernel/x86/serial.c is a polling-based serial driver. It would be nice to do

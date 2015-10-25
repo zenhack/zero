@@ -4,15 +4,36 @@
 #include <kernel/x86/asm.h>
 #include <kernel/x86/idt.h>
 #include <kernel/x86/regs.h>
+#include <kernel/x86/apic_timer_setup.h>
 
-static Regs *test_show_local_apic_id(Regs *old_ctx) {
-	printf("%d\n", get_local_apic_id());
+static volatile uint32_t delay_counter;
+
+static Regs *increment_delay_counter(Regs *old_ctx) {
+	delay_counter++;
 	return old_ctx;
 }
 
+
+/** Wait `delay_ms` milliseconds. This has the side effect of overriding the
+ * apic timer interrupt handler with `increment_delay_counter`. As such, it's
+ * not really suitable for use outside of mp_setup. */
+static void wait_ms(uint32_t delay_ms) {
+	uint32_t delay_ticks = (delay_ms * apic_timer_frequency) / 1000;
+	delay_counter = 0;
+	register_int_handler(APIC_TIMER_INT_NO, increment_delay_counter);
+	sti();
+	while(delay_counter < delay_ticks) {
+		hlt();
+	}
+}
+
 void mp_setup(void) {
+	while(1) {
+		printf("Tick\n");
+		wait_ms(10);
+	}
+# if 0
 	/** test sending IPIs: */
-	register_int_handler(254, test_show_local_apic_id);
 	ApicICR icr;
 	icr.lo.raw = get32(INT_COMMAND);
 
@@ -22,4 +43,5 @@ void mp_setup(void) {
 	put32(INT_COMMAND, icr.lo.raw);
 
 	sti();
+#endif
 }
