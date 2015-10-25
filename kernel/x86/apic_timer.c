@@ -14,7 +14,11 @@ void apic_timer_init(uint8_t int_no, uint8_t divisor, uint8_t mode) {
 	 * details. */
 	if (divisor == 0) divisor  = 7;
 	else              divisor -= 1;
+
+	/* Clear the low 4 bits; the rest is reserved and shouldn't be touched. */
+	reg &= ~0xf;
 	reg |= (divisor & 0x3) | ((divisor & 0x4)<<1);
+
 	put32(DIVIDE_CONF, reg);
 
 	/** set the lvt entry: **/
