@@ -1,0 +1,5 @@
+Title: Interrupt driven serial driver on x86
+
+kernel/x86/serial.c is a polling-based serial driver. It would be nice to do
+something interrupt driven, especially now that we have a basic preemptive
+scheduler.

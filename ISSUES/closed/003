@@ -1,0 +1,21 @@
+Title: A way to include headers for portable interfaces that are
+ implemented per-arch.
+
+# Description
+
+Right now the x86 mutex implementation is all in headers, as static inline functions.
+This means we can't just have different .c files for each arch, so we need a way to
+directy the compiler to include the right file regardless of architecture.
+
+This is probably going to involve refactoring the build system and/or shuffling some
+files around.
+
+# Resolution
+
+Instead of simply doing -I $(srcdir), put an include/ directory in each of
+the platform directories, as well as port/. portable interfaces with
+per-platform implementations can be in ${platform}/include/kernel//arch/*.h,
+which gets included as (e.g.):
+
+	#include <kernel/arch/lock.h>
+

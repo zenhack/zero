@@ -1,0 +1,15 @@
+Title: kernel/x86/text_console.[ch] is not thread-safe
+
+# Description
+
+The cursor position is in a pair of shared global variables, and there's no
+syncronization on them. If multiple threads are using this module, unexpected
+results may occur.
+
+In the simple demo where you have two threads using it as stdout, you seem to
+get occasional extra spaces/newlines between their output, which makes some
+sense.
+
+# Resolution
+
+put a busy lock around the contents of text_console_write.

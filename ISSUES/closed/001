@@ -1,0 +1,13 @@
+Title: Build system does not account for dependencies on headers
+
+# Description
+
+This hasn't been much of a problem so far, but now that we've put a few
+non-trivial things in headers (in particular, kernel/x86/lock.h), this
+is going to be a bit more dangerous.
+
+We can use the preprocessor's -M option to generate proper dependencies.
+
+# Resolution
+
+Use preprocessor's -M to generate .deps.mk files
