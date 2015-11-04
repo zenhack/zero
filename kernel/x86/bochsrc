@@ -1,0 +1,2 @@
+boot: cdrom
+ata0-master: type=cdrom, path=boot.iso, status=inserted

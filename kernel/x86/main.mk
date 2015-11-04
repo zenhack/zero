@@ -47,6 +47,11 @@ iso_build_dir/boot/grub/grub.cfg: kernel/x86/grub.cfg
 iso_build_dir/boot/kernel.x86.elf: kernel.x86.elf
 	cp $< $@
 
+bochsrc: kernel/x86/bochsrc
+	cp $< $@
+bochs-run: boot.iso bochsrc
+	bochs
+
 # Boot the kernel in qemu:
 qemu-run: all
 	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio
@@ -56,4 +61,4 @@ qemu-gdb: all
 
 include $(srcdir)/kernel/x86/tests/main.mk
 
-.PHONY: all qemu-run qemu-gdb
+.PHONY: all qemu-run qemu-gdb bochs-run
