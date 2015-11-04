@@ -37,6 +37,16 @@ COMMON_CFLAGS += \
 kernel/x86/isr_gen.c: kernel/x86/make_isrs.sh
 	$< > $@
 
+boot.iso: iso_build_dir/boot/kernel.x86.elf iso_build_dir/boot/grub/grub.cfg
+	grub-mkrescue -o $@ iso_build_dir
+iso_build_dir/boot/kernel.x86.elf iso_build_dir/boot/grub/grub.cfg: iso_build_dir/boot/grub
+iso_build_dir/boot/grub:
+	mkdir -p $@
+iso_build_dir/boot/grub/grub.cfg: kernel/x86/grub.cfg
+	cp $< $@
+iso_build_dir/boot/kernel.x86.elf: kernel.x86.elf
+	cp $< $@
+
 # Boot the kernel in qemu:
 qemu-run: all
 	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio
