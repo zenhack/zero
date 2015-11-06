@@ -1,32 +1,16 @@
-#include <kernel/x86/multiboot.h>
-#include <kernel/port/stdio.h>
-#include <kernel/x86/stdio_setup.h>
-#include <kernel/port/units.h>
-#include <kernel/port/heap.h>
-#include <kernel/port/string.h>
-#include <kernel/port/panic.h>
-#include <kernel/x86/gdt.h>
-#include <kernel/x86/idt.h>
-#include <kernel/x86/cpuid.h>
-#include <kernel/x86/apic_setup.h>
-#include <kernel/x86/paging.h>
-#include <kernel/x86/asm.h>
-#include <kernel/x86/8259pic.h>
-#include <kernel/x86/pit.h>
-#include <kernel/x86/apic_timer_setup.h>
-#include <kernel/port/sched.h>
-#include <kernel/x86/thread.h>
+#include <kernel/port/heap.h> /* heap_init */
+#include <kernel/port/stdio.h> /* printf */
+#include <kernel/port/units.h> /* KIBI */
+#include <kernel/x86/apic_setup.h> /* apic_setup */
+#include <kernel/x86/apic_timer_setup.h> /* apic_timer_setup */
+#include <kernel/x86/asm.h> /* hlt */
+#include <kernel/x86/gdt.h> /* gdt_load, gdt_desc */
+#include <kernel/x86/idt.h> /* idt_init */
+#include <kernel/x86/mp_setup.h> /* mp_setup */
+#include <kernel/x86/multiboot.h> /* MultiBootInfo */
+#include <kernel/x86/paging.h> /* paging_init */
+#include <kernel/x86/stdio_setup.h> /* stdio_init */
 
-#include <kernel/x86/mp_setup.h>
-#include <kernel/port/mmio.h>
-
-
-void example_thread(void *data) {
-	char *msg = (char *)data;
-	while(1) {
-		printf("%s\n", msg);
-	}
-}
 
 /* defined in link.ld; located at the end of the kernel image. */
 extern void *kend;
@@ -61,12 +45,6 @@ void arch_main(MultiBootInfo *mb_info) {
 	apic_timer_setup(1024);
 
 	mp_setup();
-
-//	X86Thread *threadA = mk_thread(example_thread, "A");
-//	X86Thread *threadB = mk_thread(example_thread, "B");
-
-//	sched_insert((Thread *)threadA);
-//	sched_insert((Thread *)threadB);
 
 	while(1) {
 		hlt();
