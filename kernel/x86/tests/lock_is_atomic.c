@@ -13,7 +13,7 @@ void *do_thread(void *arg) {
 	int sign = (int)arg;
 
 	for(int i = 0; i < 100000; i++) {
-		wait_aquire(&lock);
+		wait_acquire(&lock);
 		counter += sign;
 		release(&lock);
 	}

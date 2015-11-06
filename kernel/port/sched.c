@@ -12,7 +12,7 @@ void sched_insert(Thread *t) {
 }
 
 void *sched(void *old_ctx) {
-	wait_aquire(&ready_lock);
+	wait_acquire(&ready_lock);
 	running->ctx = old_ctx;
 	if(running != &k_idle) {
 		enq(&ready, (List *)running);

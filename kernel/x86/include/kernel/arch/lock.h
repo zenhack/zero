@@ -7,13 +7,13 @@
 typedef uint32_t mutex_t;
 
 static inline
-uint32_t try_aquire(mutex_t *mutex) {
+uint32_t try_acquire(mutex_t *mutex) {
 	return !cmpxchg(0, mutex, 1);
 }
 
 static inline
-void wait_aquire(mutex_t *mutex) {
-	while(!try_aquire(mutex));
+void wait_acquire(mutex_t *mutex) {
+	while(!try_acquire(mutex));
 }
 
 static inline

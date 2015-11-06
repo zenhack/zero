@@ -11,7 +11,7 @@ void panic(char *s) {
 }
 
 int main(void) {
-	wait_aquire(&lock);
+	wait_acquire(&lock);
 	release(&lock);
 	assert(!did_panic);
 	release(&lock);

@@ -74,7 +74,7 @@ static void scroll(void) {
 static size_t text_console_write(FILE *stream, void *buf, size_t len) {
 	char *s = (char*)buf;
 	size_t left = len;
-	wait_aquire(&video_lock);
+	wait_acquire(&video_lock);
 	while(left) {
 		switch(*s) {
 		case '\r':
