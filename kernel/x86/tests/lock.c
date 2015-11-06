@@ -1,4 +1,4 @@
-#include <kernel/x86/lock.h>
+#include <kernel/arch/lock.h>
 
 #include <assert.h>
 #include <stdio.h>
