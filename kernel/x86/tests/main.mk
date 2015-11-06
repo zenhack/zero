@@ -1,10 +1,15 @@
 
-the_test := kernel/x86/tests/lock.test
-
-$(the_test): $(the_test:.test=.c)
+%.test: %.c
 	cc -m32 $(COMMON_CFLAGS) -pthread -o $@ $<
 
-check: $(the_test)
-	./$(the_test)
+tests := \
+	kernel/x86/tests/lock_is_atomic.test\
+	kernel/x86/tests/lock_checks_double_release.test
+
+check: $(tests)
+	for f in $(tests); do \
+		./$$f ; \
+	done
+
 
 .PHONY: check
