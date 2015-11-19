@@ -48,7 +48,7 @@ void apic_timer_setup(uint32_t frequency) {
 	while(pit_ticks < 100) { hlt(); }
 	cli();
 
-	uint32_t new_init_count = (frequency * pit_ticks) / apic_ticks;
+	uint32_t new_init_count = (frequency * apic_ticks) / pit_ticks;
 
 	printf("  APIC ticks: %d\n",     apic_ticks);
 	printf("  PIT ticks: %d\n",      pit_ticks);
