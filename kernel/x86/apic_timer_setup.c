@@ -41,6 +41,12 @@ void apic_timer_setup(uint32_t frequency) {
 	apic_timer_init(APIC_TIMER_INT_NO, 7, APIC_TIMER_PERIODIC);
 
 	printf("Measuring APIC timer frequency...\n");
+	/* NOTE WELL: the arguments to these two functions are *not*
+	 * conceputally the same; pit_init takes the frequency to set the clock
+	 * to, while apic_timer_set takes an initial count.
+	 *
+	 * They're passed the same value so that the initial ratio between them
+	 * is 1, and then we measure the resulting ratio of frequencies. */
 	apic_timer_set(frequency);
 	pit_init(frequency);
 
