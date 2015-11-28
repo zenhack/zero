@@ -7,6 +7,9 @@ Please keep this list in alphabetical order:
 [8259]: 8259A Programmable interrupt controller datasheet
   http://pdos.csail.mit.edu/6.828/2010/readings/hardware/8259A.pdf
 
+[acpi5/*]: ACPI specification, version 5.0, section *.
+  http://www.acpi.info/DOWNLOADS/ACPI_5_Errata%20A.pdf
+
 [bcm2835]: BCM2835 ARM Peripherals
   http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
 
