@@ -49,3 +49,6 @@ clean:
 	@$(CC) -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
 
 -include $(depfiles)
+
+.SUFFIXES:
+.SECONDARY:
