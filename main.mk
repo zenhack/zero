@@ -27,7 +27,7 @@ linker_script = $(srcdir)/kernel/$(platform)/link.ld
 
 objects := $(ssrc:.S=.o) $(csrc:.c=.o)
 
-depfiles := $(objects:.o=.deps.mk)
+depfiles := $(objects:.o=.dmk)
 
 kernel.$(platform).elf: $(objects) $(linker_script)
 	@echo LINK $@
@@ -41,18 +41,11 @@ clean:
 		$(depfiles) \
 		$(cleanfiles)
 
-%.o: %.S %.deps.mk
+%.o: %.S
 	@echo AS $<
-	@$(CC) $(CFLAGS) -DASM_FILE -c -o $@ $<
-%.o: %.c %.deps.mk
+	@$(CC) -MMD -MF $@.dmk $(CFLAGS) -DASM_FILE -c -o $@ $<
+%.o: %.c
 	@echo CC $<
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
 
-%.deps.mk: %.S
-	@echo DEPS $<
-	@$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS) -DASM_FILE $< > $@
-%.deps.mk: %.c
-	@echo DEPS $<
-	@$(CPP) -M -MQ $(@:.deps.mk=.o) $(CFLAGS)  $< > $@
-
-include $(depfiles)
+-include $(depfiles)
