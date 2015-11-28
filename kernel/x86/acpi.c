@@ -27,7 +27,7 @@ static int verify_checksum(uint8_t *rsdp) {
 acpi_RSDP *acpi_find_rsdp(void) {
 	uintptr_t cursor = RSDP_START_SEARCH;
 	while(cursor <= RSDP_END_SEARCH) {
-		if(strncmp((char *)cursor, "RSD PTR ", 8) == 0
+		if(memcmp((void *)cursor, "RSD PTR ", 8) == 0
 				&& verify_checksum((uint8_t *)cursor)) {
 			return (acpi_RSDP *)cursor;
 		}

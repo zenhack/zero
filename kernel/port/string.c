@@ -9,6 +9,25 @@ size_t strlen(char *s) {
 	return size;
 }
 
+int memcmp(const void *s1, const void *s2, size_t len) {
+	const uint8_t *a, *b;
+	a = s1;
+	b = s2;
+
+	while(len > 0) {
+		if(*a > *b) {
+			return 1;
+		} else if(*a < *b) {
+			return -1;
+		} else {
+			a++;
+			b++;
+			len--;
+		}
+	}
+	return 0;
+}
+
 void *memcpy(void *dest, const void *src, size_t len) {
 	uint8_t *to, *from;
 	to = (uint8_t*)dest;
@@ -29,18 +48,19 @@ void *memset(void *s, int c, size_t n) {
 	return s;
 }
 
-int strncmp(char *s1, char *s2, size_t len) {
-	while(*s1 == *s2 && len > 0) {
-		s1++;
-		s2++;
-		len--;
+int strncmp(const char *s1, const char *s2, size_t len) {
+	while(len > 0 && *s1 && *s2) {
+		if(*s1 > *s2) {
+			return 1;
+		} else if (*s1 < *s2) {
+			return -1;
+		} else {
+			s1++;
+			s2++;
+			len--;
+		}
 	}
-	if(*s1 == *s2)
-		return 0;
-	else if(*s1 > *s2)
-		return 1;
-	else
-		return -1;
+	return 0;
 }
 
 int strcmp(char *s1, char *s2) {
