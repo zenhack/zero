@@ -1,5 +1,9 @@
 all: kernel.rpi.bin
 
+COMMON_CFLAGS += \
+	-I $(srcdir)/kernel/rpi/include \
+	-march=armv6
+
 kernel.rpi.bin: kernel.rpi.elf
 	@$(OBJCOPY) $< -O binary $@
 
