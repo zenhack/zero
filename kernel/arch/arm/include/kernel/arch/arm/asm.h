@@ -1,5 +1,5 @@
-#ifndef KERNEL_RPI_ASM_H
-#define KERNEL_RPI_ASM_H
+#ifndef KERNEL_ARCH_ARM_ASM_H
+#define KERNEL_ARCH_ARM_ASM_H
 
 #include <stdint.h>
 

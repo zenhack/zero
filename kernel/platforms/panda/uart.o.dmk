@@ -1,0 +1,4 @@
+/home/isd/src/pub/zero/kernel/platforms/panda/uart.o: \
+ /home/isd/src/pub/zero/kernel/platforms/panda/uart.c \
+ /home/isd/src/pub/zero/kernel/port/include/kernel/port/mmio.h \
+ /home/isd/src/pub/zero/kernel/platforms/panda/include/kernel/panda/uart.h

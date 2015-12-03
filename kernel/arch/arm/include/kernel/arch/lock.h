@@ -1,7 +1,7 @@
 #ifndef KERNEL_ARCH_LOCK_H
 #define KERNEL_ARCH_LOCK_H
 
-#include <kernel/rpi/asm.h>
+#include <kernel/arch/arm/asm.h>
 #include <kernel/port/panic.h>
 
 typedef uint32_t mutex_t;
