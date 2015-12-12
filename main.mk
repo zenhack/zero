@@ -47,7 +47,10 @@ clean:
 %.o: %.c
 	@echo CC $<
 	$(CC) -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
-
+%.s: %.c
+	$(CC) -S -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
+%.E: %.c
+	$(CC) -E -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
 -include $(depfiles)
 
 .SUFFIXES:
