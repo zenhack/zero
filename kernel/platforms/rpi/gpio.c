@@ -15,8 +15,8 @@ void gpio_fsel(int pin, uint32_t func) {
 	/* each of the GPFSELn registers contains 10 3-bit fields (30 bits + 2
 	 * wasted), with each pin having its own field. we compute which
 	 * register has our field, and what offset: */
-	int reg = pin % 10;
-	int off = (pin / 10) * 3;
+	int reg = pin / 10;
+	int off = (pin % 10) * 3;
 
 	uint32_t gpfsel = get32(GPIO_INDEX(GPFSEL, reg));
 
