@@ -35,10 +35,12 @@ kernel.$(platform).elf: $(objects) $(linker_script)
 
 clean:
 	@echo CLEAN
+	@find * -name '*.o' -delete
+	@find * -name '*.s' -delete
+	@find * -name '*.E' -delete
+	@find * -name '*.dmk' -delete
 	@rm -f \
-		$(shell find * -name '*.o') \
 		kernel.*.elf \
-		$(depfiles) \
 		$(cleanfiles)
 
 %.o: %.S
