@@ -42,6 +42,7 @@ int fprintf_arg(FILE *stream, char *fmt, va_list ap) {
 				break;
 			case 's':
 				fprints(stream, va_arg(ap, char *));
+				break;
 			case '\0':
 				return -1;
 			}
