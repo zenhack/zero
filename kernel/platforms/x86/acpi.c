@@ -30,6 +30,10 @@ int acpi_verify_checksum(uint8_t *value, size_t length) {
 	return checksum == 0;
 }
 
+int acpi_verify_sdt(acpi_SDT *sdt) {
+	return acpi_verify_checksum((uint8_t *)sdt, sdt->header.length);
+}
+
 /** look for the rsdp in the given address range. Return a pointer to it, or
  * NULL if not found. */
 acpi_RSDP *acpi_find_rsdp_range(uintptr_t start, uintptr_t end) {

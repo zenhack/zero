@@ -66,4 +66,7 @@ acpi_RSDP *acpi_find_rsdp(void);
  * zero. This is used by several datatypes in ACPI. */
 int acpi_verify_checksum(uint8_t *value, size_t length);
 
+/* Verify the checksum for sdt. */
+int acpi_verify_sdt(acpi_SDT *sdt);
+
 #endif
