@@ -27,7 +27,7 @@ linker_script = $(srcdir)/kernel/platforms/$(platform)/link.ld
 
 objects := $(ssrc:.S=.o) $(csrc:.c=.o)
 
-depfiles := $(objects:.o=.dmk)
+depfiles := $(objects:=.dmk)
 
 kernel.$(platform).elf: $(objects) $(linker_script)
 	@echo LINK $@
