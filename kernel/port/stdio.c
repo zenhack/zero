@@ -49,7 +49,8 @@ int fprintf_arg(FILE *stream, char *fmt, va_list ap) {
 				c = (char)va_arg(ap, int);
 				stream->write(stream, &c, sizeof(char));
 				break;
-			case '\0':
+			default:
+				fprintf(stream, "<< INVALID FORMAT CHAR: 0x%x >>", *fmt);
 				return -1;
 			}
 		} else {
