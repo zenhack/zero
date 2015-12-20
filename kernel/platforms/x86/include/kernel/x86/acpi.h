@@ -61,4 +61,9 @@ struct acpi_SDT {
  * cannot be found. The BIOS's memory must be identity-mapped for this to work. */
 acpi_RSDP *acpi_find_rsdp(void);
 
+/* Return true if the checksum for value validates, else false.
+ * The checksum computed is the sum of all the bytes, which must be equal to
+ * zero. This is used by several datatypes in ACPI. */
+int acpi_verify_checksum(uint8_t *value, size_t length);
+
 #endif

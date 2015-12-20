@@ -22,11 +22,10 @@
  */
 #define EBDA_PTR ((uintptr_t *)0x40e)
 
-/* Return true if the checksum for the RSDP structure validates, else false. */
-static int verify_checksum(uint8_t *rsdp) {
+int acpi_verify_checksum(uint8_t *value, size_t length) {
 	uint8_t checksum = 0;
-	for(int i = 0; i < 20; i++) {
-		checksum += rsdp[i];
+	for(size_t i = 0; i < length; i++) {
+		checksum += value[i];
 	}
 	return checksum == 0;
 }
@@ -37,7 +36,9 @@ acpi_RSDP *acpi_find_rsdp_range(uintptr_t start, uintptr_t end) {
 	uintptr_t cursor = start;
 	while(cursor <= end) {
 		if(memcmp((void *)cursor, "RSD PTR ", 8) == 0
-				&& verify_checksum((uint8_t *)cursor)) {
+				&& acpi_verify_checksum(
+					(uint8_t *)cursor,
+					sizeof(acpi_RSDPv1))) {
 			return (acpi_RSDP *)cursor;
 		}
 		cursor += 16;
