@@ -21,6 +21,8 @@ int printf(char *fmt, ...) {
 }
 
 int fprintf_arg(FILE *stream, char *fmt, va_list ap) {
+	char c;
+
 	while(*fmt) {
 		if(*fmt == '%') {
 			fmt++;
@@ -42,6 +44,10 @@ int fprintf_arg(FILE *stream, char *fmt, va_list ap) {
 				break;
 			case 's':
 				fprints(stream, va_arg(ap, char *));
+				break;
+			case 'c':
+				c = (char)va_arg(ap, int);
+				stream->write(stream, &c, sizeof(char));
 				break;
 			case '\0':
 				return -1;
