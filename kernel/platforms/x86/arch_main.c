@@ -1,7 +1,6 @@
 #include <kernel/port/heap.h> /* heap_init */
 #include <kernel/port/stdio.h> /* printf */
 #include <kernel/port/units.h> /* KIBI */
-#include <kernel/x86/acpi.h> /* acpi_find_rsdp */
 #include <kernel/x86/apic_setup.h> /* apic_setup */
 #include <kernel/x86/apic_timer_setup.h> /* apic_timer_setup */
 #include <kernel/x86/asm.h> /* hlt */
@@ -44,9 +43,6 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	apic_setup();
 	apic_timer_setup(1024);
-
-	acpi_RSDP *rsdp = acpi_find_rsdp();
-	printf("RSDP Address: 0x%x\n", rsdp);
 
 	mp_setup();
 
