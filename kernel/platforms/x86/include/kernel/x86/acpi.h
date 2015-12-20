@@ -3,10 +3,17 @@
 
 #include <stdint.h>
 
+/* Interrupt controller structure types, in the MADT */
+enum {
+	ACPI_INT_CTL_LOCAL_APIC = 0
+};
+
 typedef struct acpi_RSDPv1 acpi_RSDPv1;
 typedef struct acpi_RSDP acpi_RSDP;
 typedef struct acpi_SDTHeader acpi_SDTHeader;
 typedef struct acpi_RSDTBody acpi_RSDTBody;
+typedef struct acpi_MADTBody acpi_MADTBody;
+typedef struct acpi_IntCtlEnt acpi_IntCtlEnt;
 typedef struct acpi_SDT acpi_SDT;
 
 struct acpi_RSDPv1 {
@@ -50,10 +57,33 @@ struct acpi_RSDTBody {
 	uint32_t sdts;
 };
 
+struct acpi_IntCtlEnt {
+	uint8_t type;
+	uint8_t length;
+	union {
+		struct {
+			uint8_t acpi_processor_id;
+			uint8_t apic_id;
+			struct {
+				uint32_t enabled  :  1;
+				uint32_t reserved : 31;
+			} flags;
+		} local_apic;
+	} body;
+}__attribute__((packed));
+
+
+struct acpi_MADTBody {
+	uint32_t local_ic_addr;
+	uint32_t flags;
+	acpi_IntCtlEnt int_ctl_ents; /* Possibly more than one of these. */
+};
+
 struct acpi_SDT {
 	acpi_SDTHeader header;
 	union {
 		acpi_RSDTBody rsdt;
+		acpi_MADTBody madt;
 	} body;
 }__attribute__((packed));
 
