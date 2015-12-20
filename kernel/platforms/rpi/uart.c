@@ -55,7 +55,16 @@ void uart_init(void) {
 
 }
 
+#define GPIO_B 0x00200000
+#define UART0_BASE (GPIO_B + 0x1000)
+#define UART0_DR UART0_BASE
+#define UART0_FR (UART0_BASE + 0x18)
+
 void uart_putc(uint8_t c) {
+#if 0
 	while(!(get32(AUX_MU_STAT_REG) & (1<<9))); /* transmitter done */
-	put32(AUX_MU_IO_REG, KEEP_LO(8) | c);
+	put32(AUX_MU_IO_REG, KEEP_LO(8) & c);
+#endif
+	while(get32(UART0_FR) & (1 << 5));
+	put32(UART0_DR, c);
 }
