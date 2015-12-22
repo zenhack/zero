@@ -4,8 +4,7 @@ cat << "EOF"
 #include <kernel/x86/isr.h>
 EOF
 
-i=0
-while [ $i -lt 256 ]; do
+for i in `seq 0 255`; do
 	case $i in
 		8|10|11|12|13|14)
 			err=REAL_ERR
@@ -15,14 +14,11 @@ while [ $i -lt 256 ]; do
 			;;
 	esac
 	printf 'ISR(%d, %s)\n' "$i" "$err"
-	i=$(( $i + 1 ))
 done
 
 printf 'void (*isrs[])() = {\n'
-i=0
-while [ $i -lt 255 ]; do
+for i in `seq 0 254`; do
 	printf '\tisr%d,\n' $i
-	i=$(( $i + 1 ))
 done
 printf '\tisr255\n'
 printf '};\n'
