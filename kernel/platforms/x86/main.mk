@@ -35,6 +35,9 @@ cleanfiles += \
 COMMON_CFLAGS += \
 	-I $(srcdir)/kernel/platforms/x86/include
 
+QEMU_FLAGS += \
+	-smp 4
+
 kernel/platforms/x86/isr_gen.c: kernel/platforms/x86/make_isrs.sh
 	$< > $@
 
@@ -55,10 +58,10 @@ bochs-run: boot.iso bochsrc
 
 # Boot the kernel in qemu:
 qemu-run: all
-	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio
+	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio $(QEMU_FLAGS)
 # Same thing, but wait for gdb to attach:
 qemu-gdb: all
-	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio -s -S
+	qemu-system-i386 -kernel $(objdir)/kernel.x86.elf -serial stdio -s -S $(QEMU_FLAGS)
 
 include $(srcdir)/kernel/platforms/x86/tests/main.mk
 
