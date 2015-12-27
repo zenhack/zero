@@ -9,6 +9,9 @@
 #include <kernel/x86/apic_timer_setup.h>
 
 
+/* Determine the number of logical CPUs in the system.
+ *
+ * We retrieve this information from the ACPI tables. */
 static size_t get_cpu_count(void) {
 	/* TODO: move more of this logic to acpi.c */
 	acpi_RSDP *rsdp = acpi_find_rsdp();
@@ -34,43 +37,34 @@ static size_t get_cpu_count(void) {
 	return num_sdts;
 }
 
-static volatile uint32_t delay_counter;
-
-static Regs *increment_delay_counter(Regs *old_ctx) {
-	delay_counter++;
-	return old_ctx;
+static void do_ipi(uint32_t deliv_mode, uint8_t vector) {
+	ApicICR icr;
+	icr.lo.raw = get32(INT_COMMAND);
+	icr.lo.dest_shorthand = ICR_IPI_ALL_BUT_SELF;
+	icr.lo.deliv_mode = deliv_mode;
+	icr.lo.level = ICR_ASSERT;
+	icr.lo.vector = vector;
+	put32(INT_COMMAND, icr.lo.raw);
 }
 
+static void send_init(void) {
+	do_ipi(ICR_DELIV_INIT, 0); /* vector is ignored here. */
+}
 
-/** Wait `delay_ms` milliseconds. This has the side effect of overriding the
- * apic timer interrupt handler with `increment_delay_counter`. As such, it's
- * not really suitable for use outside of mp_setup. */
-static void wait_ms(uint32_t delay_ms) {
-	uint32_t delay_ticks = (delay_ms * apic_timer_frequency) / 1000;
-	delay_counter = 0;
-	register_int_handler(APIC_TIMER_INT_NO, increment_delay_counter);
-	sti();
-	while(delay_counter < delay_ticks) {
-		hlt();
-	}
+static void send_sipi(uint8_t vector) {
+	do_ipi(ICR_DELIV_STARTUP, vector);
 }
 
 void mp_setup(void) {
-	printf("%d\n", get_cpu_count());
-	while(1) {
-//		printf("Tick\n");
-		wait_ms(10);
-	}
-# if 0
-	/** test sending IPIs: */
-	ApicICR icr;
-	icr.lo.raw = get32(INT_COMMAND);
+	size_t num_cpu = get_cpu_count();
+	printf("CPU count: %d\n", num_cpu);
 
-	icr.lo.dest_shorthand = ICR_IPI_ALL_BUT_SELF;
-	icr.lo.deliv_mode = ICR_DELIV_INIT;
-	icr.lo.level = ICR_ASSERT;
-	put32(INT_COMMAND, icr.lo.raw);
-
-	sti();
-#endif
+	printf("Sending init...\n");
+	send_init();
+	printf("Sending sipi...\n");
+	/* TODO: we ought to be putting a more explicit wait here; intel
+	 * suggests 10 ms. It seems to be working though (printf probably takes
+	 * long enough). */
+	send_sipi(0x08);
+	while(1);
 }
