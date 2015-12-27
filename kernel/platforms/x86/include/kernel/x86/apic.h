@@ -58,7 +58,7 @@ enum {
 /*	(reserved) = 3; */
 	ICR_DELIV_NMI = 4,
 	ICR_DELIV_INIT = 5,
-	ICR_DELIV_STARTUP = 5
+	ICR_DELIV_STARTUP = 6
 /*	(reserved) = 7 */
 };
 
