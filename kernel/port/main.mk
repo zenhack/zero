@@ -10,3 +10,5 @@ csrc += \
 
 COMMON_CFLAGS += \
 	-I $(srcdir)/kernel/port/include
+
+include $(srcdir)/kernel/port/tests/main.mk
