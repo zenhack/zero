@@ -41,7 +41,8 @@ clean:
 	@find * -name '*.dmk' -delete
 	@rm -f \
 		kernel.*.elf \
-		$(cleanfiles)
+		$(cleanfiles) \
+		$(tests)
 
 %.o: %.S
 	@echo AS $<
@@ -55,5 +56,14 @@ clean:
 	$(CC) -E -MMD -MF $@.dmk $(CFLAGS) -c -o $@ $<
 -include $(depfiles)
 
+%.test: %.c
+	$(HOST_CC) $(COMMON_CFLAGS) -pthread -o $@ $<
+
+check: $(tests)
+	for f in $(tests); do \
+		./$$f ; \
+	done
+
 .SUFFIXES:
 .SECONDARY:
+.PHONY: check
