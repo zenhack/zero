@@ -9,8 +9,9 @@ multiboot:
 	.long MULTIBOOT_FLAGS
 	.long MULTIBOOT_CHKSUM(MULTIBOOT_FLAGS)
 
-.globl start
-start:
+/* Entry point for the bootstrap processor. This is invoked by grub. */
+.globl bsp_start
+bsp_start:
 	/* load the stack */
 	lea boot_stack-4, %esp
 	mov 0, %ebp
@@ -26,6 +27,15 @@ start:
 	/* arch_main *shouldn't* return, but if it does, hang. */
 hang:
 	jmp hang
+
+/* Entry point for the application processors (APs). These are started by an IPI
+ * sent from the BSP. It is aligned on a page boudnary so the APs can be
+ * directed to it. */
+.align 4096
+.globl ap_start
+ap_start:
+	hlt
+	jmp ap_start
 
 .bss
 /* reserve space for a stack. */

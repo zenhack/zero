@@ -8,6 +8,8 @@
 #include <kernel/x86/regs.h>
 #include <kernel/x86/apic_timer_setup.h>
 
+/* defined in boot.S. Entry point for application processors. */
+extern void (*ap_start)(void);
 
 /* Determine the number of logical CPUs in the system.
  *
@@ -56,6 +58,14 @@ static void send_sipi(uint8_t vector) {
 }
 
 void mp_setup(void) {
+	uintptr_t ap_start_addr = (uintptr_t)&ap_start;
+	if(ap_start_addr % 4096 != 0) {
+		panic("BUG: ap_start() is not aligned on a page boundary!");
+	}
+	uintptr_t ap_start_page_num = ap_start_addr / 4096;
+	if(ap_start_page_num > 0xff) {
+		panic("BUG: ap_start() is located outside of low memory!");
+	}
 	size_t num_cpu = get_cpu_count();
 	printf("CPU count: %d\n", num_cpu);
 
@@ -65,6 +75,6 @@ void mp_setup(void) {
 	/* TODO: we ought to be putting a more explicit wait here; intel
 	 * suggests 10 ms. It seems to be working though (printf probably takes
 	 * long enough). */
-	send_sipi(0x08);
+	send_sipi((uint8_t)ap_start_page_num);
 	while(1);
 }
