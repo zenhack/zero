@@ -35,9 +35,10 @@ void arch_main(MultiBootInfo *mb_info) {
 	printf("  High memory : 0x%x\n", mb_info->mem_upper * KIBI);
 	printf("  Kernel image ends at : 0x%x\n", &kend);
 
-	/* initialize the heap, using the chunk of memory between the
-	 * kernel and mem_upper. */
-	heap_init((uintptr_t)&kend, (uintptr_t)mb_info->mem_upper * KIBI);
+	/* Initialize the heap. We use the first contiguous region in "high
+	 * memory" (only accessible from protected mode). We'll of course want
+	 * to change this at some point. */
+	heap_init(1 * MEBI, (uintptr_t)mb_info->mem_upper * KIBI);
 
 	paging_init(mb_info->mem_upper * KIBI);
 
