@@ -1,4 +1,6 @@
 #include <kernel/port/stdio.h>
+#include <kernel/port/string.h>
+#include <kernel/port/heap.h>
 #include <kernel/port/mmio.h>
 #include <kernel/port/panic.h>
 #include <kernel/x86/acpi.h>
@@ -10,6 +12,34 @@
 
 /* defined in boot.S. Entry point for application processors. */
 extern void (*ap_start)(void);
+
+int32_t num_cpus;
+void *ap_stacks;
+
+
+/* Count the number of local apic structures in sdt, which must be a MADT.
+ * Each such structure represents a logical CPU. */
+static size_t count_local_apic_structs(acpi_SDT *sdt) {
+	/* The SDT's header gives us the total length of the table. Each entry
+	 * contains a length field for that entry as well. We iterate over the
+	 * entries until we're at the end of the entire table. There's some
+	 * pointer arithmetic happening here due to the fact that C can't
+	 * describe variable-length structs. */
+	size_t count = 0;
+	size_t length_remaining = sdt->header.length;
+	acpi_IntCtlEnt *next_ent = &sdt->body.madt.int_ctl_ents;
+	length_remaining -= ((size_t)next_ent) - ((size_t)sdt);
+	while(length_remaining > 0) {
+		/* There are other types, e.g. IOAPICs, so we need to check that
+		 * it's the right kind. */
+		if(next_ent->type == ACPI_INT_CTL_LOCAL_APIC) {
+			count++;
+		}
+		length_remaining -= next_ent->length;
+		next_ent = (acpi_IntCtlEnt*)(((uintptr_t)next_ent) + next_ent->length);
+	}
+	return count;
+}
 
 /* Determine the number of logical CPUs in the system.
  *
@@ -27,6 +57,7 @@ static size_t get_cpu_count(void) {
 	}
 	size_t num_sdts = (rsdt->header.length - sizeof(acpi_SDTHeader)) / sizeof(acpi_SDT *);
 	acpi_SDT **sdts = (acpi_SDT**)&rsdt->body.rsdt.sdts;
+	size_t cpu_count = 0;
 	for(size_t i = 0; i < num_sdts; i++) {
 		if(!acpi_verify_sdt(sdts[i])) {
 			char *sig = (char *)&sdts[i]->header.signature[0];
@@ -34,9 +65,13 @@ static size_t get_cpu_count(void) {
 				i, sig[0], sig[1], sig[2], sig[3]);
 			panic("Bad SDT checksum!\n");
 		}
+		if(memcmp(sdts[i], "APIC", 4) == 0) {
+			size_t apic_struct_count = count_local_apic_structs(sdts[i]);
+			printf("Found MADT with %d apic structures.\n", apic_struct_count);
+			cpu_count += apic_struct_count;
+		}
 	}
-	/* TODO: finish writing this; stopping to test. */
-	return num_sdts;
+	return cpu_count;
 }
 
 static void do_ipi(uint32_t deliv_mode, uint8_t vector) {
@@ -58,6 +93,7 @@ static void send_sipi(uint8_t vector) {
 }
 
 void mp_setup(void) {
+	printf("Bringing up extra CPUs...\n");
 	uintptr_t ap_start_addr = (uintptr_t)&ap_start;
 	if(ap_start_addr % 4096 != 0) {
 		panic("BUG: ap_start() is not aligned on a page boundary!");
@@ -66,8 +102,10 @@ void mp_setup(void) {
 	if(ap_start_page_num > 0xff) {
 		panic("BUG: ap_start() is located outside of low memory!");
 	}
-	size_t num_cpu = get_cpu_count();
-	printf("CPU count: %d\n", num_cpu);
+	num_cpus = get_cpu_count();
+	printf("CPU count: %d\n", num_cpus);
+	/* allocate stacks: */
+	ap_stacks = kalloc_align(4096 * num_cpus, 4096);
 
 	printf("Sending init...\n");
 	send_init();

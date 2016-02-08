@@ -1,6 +1,13 @@
 #include <kernel/x86/multiboot.h>
+#include <kernel/x86/apic.h>
+#include <kernel/x86/gdt.h>
+
+.extern num_cpus
+.extern ap_stacks
+.extern gdt_desc
 
 #define MULTIBOOT_FLAGS MULTIBOOT_MEMINFO
+#define AP_STACK_SIZE 4096
 
 .globl multiboot
 .align 4
@@ -34,11 +41,37 @@ hang:
 .align 4096
 .globl ap_start
 ap_start:
+	/* First, load the GDT: */
+	movl $gdt_desc, %eax
+	lgdt (%eax)
+	movw $SEGOFF(KDATA_SEGMENT), %ax
+	movw %ax, %ds
+	movw %ax, %es
+	movw %ax, %fs
+	movw %ax, %gs
+	movw %ax, %ss
+	jmpl $SEGOFF(KCODE_SEGMENT), $ap_code_segment
+ap_code_segment:
+	/* Next, get yourself a stack: */
+	movl LOCAL_APIC_ID, %eax
+	addl 1, %eax
+	/* Multiply by 4096; this gets us a memory offeset for the stack: */
+	shll $12, %eax
+
+	/* Add the base: */
+	movl num_cpus, %edx
+	addl %edx, %eax
+
+	movl %eax, %esp
+	movl 0, %ebp
+	cli
+	call ap_main
+
 	hlt
-	jmp ap_start
+	jmp hang
 
 .bss
-/* reserve space for a stack. */
+/* reserve space for a stack for the BSP. */
 	.align 16
 	.space 0x4000 /* relatively arbitrary */
 boot_stack:
