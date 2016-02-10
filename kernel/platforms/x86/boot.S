@@ -41,7 +41,10 @@ hang:
 .align 4096
 .globl ap_start
 ap_start:
-	/* First, load the GDT: */
+	/* First, clear interrupts. */
+	cli
+	/* Then, load the GDT: */
+	/* TODO: This is copypasta from gdt_load.S. We should factor this out. */
 	movl $gdt_desc, %eax
 	lgdt (%eax)
 	movw $SEGOFF(KDATA_SEGMENT), %ax
@@ -50,25 +53,45 @@ ap_start:
 	movw %ax, %fs
 	movw %ax, %gs
 	movw %ax, %ss
-	jmpl $SEGOFF(KCODE_SEGMENT), $ap_code_segment
-ap_code_segment:
-	/* Next, get yourself a stack: */
+
+	/* Next, set the PE bit in cr0, which enables protected mode: */
+	movl %cr0, %eax
+	orl $1, %eax
+	movl %eax, %cr0
+
+/* Both [intel/3/9.10] and [osdev/Protected_Mode] claim that we need to
+ * execute a *far* jump here, in order to actually start executing protected
+ * mode code. However,
+ *
+ * 1. The example code in [intel/3/9.10.2] doesn't do this, it does a *near*
+ *    jump (with a comment that says "clear prefetch queue").
+ * 2. Imperically, doing a far jump here seems to cause a triple fault.
+ * 3. According to bochs after the near jump we're in protected mode.
+ *
+ * I'm not really satisifed with this; we ought to understand why this code
+ * works, and I worry that once we implement a bit more we'll find
+ * it actually doesn't. For now though, we follow the example in
+ * [intel/3/9.10.2]. */
+	jmp ap_protected_mode
+ap_protected_mode:
+
+	/* Now get yourself a stack: */
 	movl LOCAL_APIC_ID, %eax
 	addl 1, %eax
 	/* Multiply by 4096; this gets us a memory offeset for the stack: */
 	shll $12, %eax
-
 	/* Add the base: */
 	movl num_cpus, %edx
 	addl %edx, %eax
 
 	movl %eax, %esp
 	movl 0, %ebp
-	cli
-	call ap_main
 
-	hlt
-	jmp hang
+/* Uncommenting this call results in a triple fault; we need to figure out why. */
+//	call ap_main
+
+hang_ap:
+	jmp hang_ap
 
 .bss
 /* reserve space for a stack for the BSP. */
