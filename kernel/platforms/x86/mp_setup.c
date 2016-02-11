@@ -13,8 +13,8 @@
 /* defined in boot.S. Entry point for application processors. */
 extern void (*ap_start)(void);
 
-int32_t num_cpus;
-void *ap_stacks;
+volatile int32_t num_cpus;
+volatile void *ap_stacks;
 
 
 /* Count the number of local apic structures in sdt, which must be a MADT.

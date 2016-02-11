@@ -19,8 +19,8 @@ void mp_setup(void);
  * BSP, which isn't needed. I (isd) *suspect* we can rely on the BSP always being
  * LAPIC #0, but for right now we're not relying on that. At some point we
  * should do the research. */
-extern int32_t num_cpus;
-extern void *ap_stacks;
+extern volatile int32_t num_cpus;
+extern volatile void *ap_stacks;
 
 
 #endif

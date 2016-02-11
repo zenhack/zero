@@ -41,60 +41,58 @@ hang:
 .align 4096
 .globl ap_start
 ap_start:
+	.code16
+	/** This is the standard logic for switching into protected mode
+         * described by [osdev/Protected_Mode] and the intel manual. **/
+
 	/* First, clear interrupts. */
 	cli
+
 	/* Then, load the GDT: */
-	/* TODO: This is copypasta from gdt_load.S. We should factor this out. */
 	movl $gdt_desc, %eax
 	lgdt (%eax)
-	movw $SEGOFF(KDATA_SEGMENT), %ax
-	movw %ax, %ds
-	movw %ax, %es
-	movw %ax, %fs
-	movw %ax, %gs
-	movw %ax, %ss
 
 	/* Next, set the PE bit in cr0, which enables protected mode: */
 	movl %cr0, %eax
 	orl $1, %eax
 	movl %eax, %cr0
 
-/* Both [intel/3/9.10] and [osdev/Protected_Mode] claim that we need to
- * execute a *far* jump here, in order to actually start executing protected
- * mode code. However,
- *
- * 1. The example code in [intel/3/9.10.2] doesn't do this, it does a *near*
- *    jump (with a comment that says "clear prefetch queue").
- * 2. Imperically, doing a far jump here seems to cause a triple fault.
- * 3. According to bochs after the near jump we're in protected mode.
- *
- * I'm not really satisifed with this; we ought to understand why this code
- * works, and I worry that once we implement a bit more we'll find
- * it actually doesn't. For now though, we follow the example in
- * [intel/3/9.10.2]. */
-	jmp ap_protected_mode
+	/* Now do a far jump to actually enter protected_mode: */
+	jmpl $SEGOFF(KCODE_SEGMENT), $ap_protected_mode
 ap_protected_mode:
+	.code32
+
+	/* set up a stack: */
+	movl $ap1_stack-4, %esp
+	movl $0, %ebp
+
+	/* ...and call the C code: */
+	call ap_main
+ap_hang:
+	jmp hang
+
+
+#if 0
+	/* We'll need this when we start dealing with > 1 AP; The code above
+	 * just uses a stack at a fixed address, which only works for one cpu.
+	 */
 
 	/* Now get yourself a stack: */
-	movl LOCAL_APIC_ID, %eax
+	movl $LOCAL_APIC_ID, %edx
+	movl (%edx), %eax
 	addl 1, %eax
 	/* Multiply by 4096; this gets us a memory offeset for the stack: */
 	shll $12, %eax
 	/* Add the base: */
-	movl num_cpus, %edx
-	addl %edx, %eax
-
-	movl %eax, %esp
-	movl 0, %ebp
-
-/* Uncommenting this call results in a triple fault; we need to figure out why. */
-//	call ap_main
-
-hang_ap:
-	jmp hang_ap
+	movl $num_cpus, %edx
+	addl (%edx), %eax
+#endif
 
 .bss
 /* reserve space for a stack for the BSP. */
 	.align 16
 	.space 0x4000 /* relatively arbitrary */
 boot_stack:
+	.align 16
+	.space 0x4000
+ap1_stack:
