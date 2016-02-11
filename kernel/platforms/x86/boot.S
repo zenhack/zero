@@ -73,6 +73,10 @@ ap_protected_mode:
 	jmpl $SEGOFF(KCODE_SEGMENT), $with_new_gdt
 with_new_gdt:
 
+	/* Load the IDT: */
+	movl $idt_desc, %eax
+	lidt (%eax)
+
 	/* Get a stack: */
 
 get_stack_lock:
