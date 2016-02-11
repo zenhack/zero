@@ -19,4 +19,7 @@ void apic_timer_setup(uint32_t frequency);
  * effect of calling apic_timer_setup(). */
 extern uint32_t apic_timer_frequency;
 
+/* stores the intial count for the apic used to achieve `apic_timer_frequency`. */
+extern uint32_t apic_timer_init_count;
+
 #endif

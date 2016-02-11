@@ -9,6 +9,8 @@
 #include <kernel/x86/pit.h>
 
 uint32_t apic_timer_frequency;
+uint32_t apic_timer_init_count;
+
 
 /* If we don't put volatile on these, the loop that checks if they've hit
  * appropriate values may be optimized to cache them in registers, which
@@ -67,4 +69,5 @@ void apic_timer_setup(uint32_t frequency) {
 
 	disable_8259pic();
 	apic_timer_frequency = frequency;
+	apic_timer_init_count = new_init_count;
 }
