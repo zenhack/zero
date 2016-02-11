@@ -17,6 +17,7 @@ csrc += \
 	kernel/platforms/x86/apic_timer_setup.c\
 	kernel/platforms/x86/ap_main.c\
 	kernel/platforms/x86/arch_main.c\
+	kernel/platforms/x86/common_main.c\
 	kernel/platforms/x86/gdt.c\
 	kernel/platforms/x86/idt.c\
 	kernel/platforms/x86/stdio_setup.c\

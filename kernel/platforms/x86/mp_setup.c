@@ -121,5 +121,4 @@ void mp_setup(void) {
 	 * suggests 10 ms. It seems to be working though (printf probably takes
 	 * long enough). */
 	send_sipi((uint8_t)ap_start_page_num);
-	while(1);
 }

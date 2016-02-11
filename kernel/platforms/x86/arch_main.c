@@ -10,6 +10,7 @@
 #include <kernel/x86/multiboot.h> /* MultiBootInfo */
 #include <kernel/x86/paging.h> /* paging_init */
 #include <kernel/x86/stdio_setup.h> /* stdio_init */
+#include <kernel/x86/common_main.h> /* common_main */
 
 
 /* defined in link.ld; located at the end of the kernel image. */
@@ -47,7 +48,5 @@ void arch_main(MultiBootInfo *mb_info) {
 
 	mp_setup();
 
-	while(1) {
-		hlt();
-	}
+	common_main();
 }
