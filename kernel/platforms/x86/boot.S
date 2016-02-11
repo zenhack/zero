@@ -62,6 +62,18 @@ ap_start:
 ap_protected_mode:
 	.code32
 
+	/* The gdt pointer has already been loaded, but we need to make sure
+	 * we're actually using its contents: */
+	movw $SEGOFF(KDATA_SEGMENT), %ax
+	movw %ax, %ds
+	movw %ax, %es
+	movw %ax, %fs
+	movw %ax, %gs
+	movw %ax, %ss
+	jmpl $SEGOFF(KCODE_SEGMENT), $with_new_gdt
+with_new_gdt:
+
+
 	/* set up a stack: */
 	movl $ap1_stack-4, %esp
 	movl $0, %ebp
