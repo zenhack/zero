@@ -3,6 +3,9 @@
 #include <kernel/port/units.h>
 #include <kernel/port/stdio.h>
 #include <kernel/port/panic.h>
+#include <kernel/arch/lock.h>
+
+static mutex_t heap_lock;
 
 /* round_up returns `n` rounded to the next value that is zero
  * modulo `align`. */
@@ -21,12 +24,14 @@ void heap_init(uintptr_t start, uintptr_t end) {
 }
 
 void *kalloc_align(uintptr_t size, uintptr_t alignment) {
+	wait_acquire(&heap_lock);
 	heap_next = round_up(heap_next, alignment);
 	uintptr_t ret = heap_next;
 	heap_next += size;
 	if(heap_next > heap_end) {
 		panic("Out of space!");
 	}
+	release(&heap_lock);
 	return (void*)ret;
 }
 
