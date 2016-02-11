@@ -39,7 +39,7 @@ COMMON_CFLAGS += \
 HOST_CC := cc -m32
 
 QEMU_FLAGS += \
-	-smp 2
+	-smp 4
 kernel/platforms/x86/isr_gen.c: kernel/platforms/x86/make_isrs.sh
 	$< > $@
 
