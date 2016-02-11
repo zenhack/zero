@@ -1,6 +1,6 @@
 #include <kernel/port/stdio.h>
-#include <kernel/x86/apic.h>
+#include <kernel/x86/apic_setup.h>
 
 void ap_main(void) {
-	printf("Hello from apic #%d!\n", get_local_apic_id());
+	apic_setup();
 }
