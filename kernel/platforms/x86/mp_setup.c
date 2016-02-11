@@ -1,5 +1,6 @@
 #include <kernel/port/stdio.h>
 #include <kernel/port/string.h>
+#include <kernel/port/data.h>
 #include <kernel/port/heap.h>
 #include <kernel/port/mmio.h>
 #include <kernel/port/panic.h>
@@ -9,12 +10,13 @@
 #include <kernel/x86/idt.h>
 #include <kernel/x86/regs.h>
 #include <kernel/x86/apic_timer_setup.h>
+#include <kernel/x86/mp_setup.h>
 
 /* defined in boot.S. Entry point for application processors. */
 extern void (*ap_start)(void);
 
-volatile int32_t num_cpus;
-volatile void *ap_stacks;
+mutex_t ap_stack_lock;
+volatile List *ap_stacks;
 
 
 /* Count the number of local apic structures in sdt, which must be a MADT.
@@ -102,10 +104,15 @@ void mp_setup(void) {
 	if(ap_start_page_num > 0xff) {
 		panic("BUG: ap_start() is located outside of low memory!");
 	}
-	num_cpus = get_cpu_count();
+	size_t num_cpus = get_cpu_count();
 	printf("CPU count: %d\n", num_cpus);
-	/* allocate stacks: */
-	ap_stacks = kalloc_align(4096 * num_cpus, 4096);
+
+	/* allocate stacks. The -1 is because we don't need a new stack for the
+	 * BSP. */
+	size_t buf_size = 4096 * (num_cpus - 1);
+	void *buf = (List *)kalloc_align(buf_size, 4096);
+	ap_stacks = sew_list(buf, buf_size, 4096);
+
 
 	printf("Sending init...\n");
 	send_init();

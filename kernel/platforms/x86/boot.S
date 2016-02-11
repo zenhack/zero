@@ -73,9 +73,30 @@ ap_protected_mode:
 	jmpl $SEGOFF(KCODE_SEGMENT), $with_new_gdt
 with_new_gdt:
 
+	/* Get a stack: */
 
-	/* set up a stack: */
-	movl $ap1_stack-4, %esp
+get_stack_lock:
+	movl $0, %eax
+	movl $1, %edx
+	lock
+	cmpxchgl %edx, ap_stack_lock
+	jnz get_stack_lock
+
+	/* knab the first element in the list: */
+	movl ap_stacks, %esp
+	movl (%esp), %eax
+	movl %eax, ap_stacks
+
+	/* release the lock: */
+	movl $1, %eax
+	movl $0, %edx
+	lock
+	cmpxchgl %edx, ap_stack_lock
+
+	/* adjust for the fact that x86 stacks grow down: */
+	addl $4092, %esp
+
+	/* Set the base pointer to make bactraces look nice: */
 	movl $0, %ebp
 
 	/* ...and call the C code: */
@@ -84,27 +105,8 @@ ap_hang:
 	jmp hang
 
 
-#if 0
-	/* We'll need this when we start dealing with > 1 AP; The code above
-	 * just uses a stack at a fixed address, which only works for one cpu.
-	 */
-
-	/* Now get yourself a stack: */
-	movl $LOCAL_APIC_ID, %edx
-	movl (%edx), %eax
-	addl 1, %eax
-	/* Multiply by 4096; this gets us a memory offeset for the stack: */
-	shll $12, %eax
-	/* Add the base: */
-	movl $num_cpus, %edx
-	addl (%edx), %eax
-#endif
-
 .bss
 /* reserve space for a stack for the BSP. */
 	.align 16
 	.space 0x4000 /* relatively arbitrary */
 boot_stack:
-	.align 16
-	.space 0x4000
-ap1_stack:
