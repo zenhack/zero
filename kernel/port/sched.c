@@ -8,7 +8,9 @@ static Thread k_idle;
 static Thread *running = &k_idle;
 
 void sched_insert(Thread *t) {
+	wait_acquire(&ready_lock);
 	enq(&ready, (List *)t);
+	release(&ready_lock);
 }
 
 void *sched(void *old_ctx) {
