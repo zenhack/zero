@@ -100,7 +100,7 @@ get_stack_lock:
 	/* adjust for the fact that x86 stacks grow down: */
 	addl $4092, %esp
 
-	/* Set the base pointer to make bactraces look nice: */
+	/* Set the base pointer to make backtraces look nice: */
 	movl $0, %ebp
 
 	/* ...and call the C code: */
