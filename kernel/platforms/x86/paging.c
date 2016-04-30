@@ -3,10 +3,6 @@
 
 static PageStruct initial_page_dir;
 
-static inline uintptr_t max(uintptr_t a, uintptr_t b) {
-	return (a > b)? a: b;
-}
-
 /* in paging_asm.S */
 extern void enable_paging(void);
 
