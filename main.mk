@@ -3,7 +3,7 @@ VPATH := $(srcdir)
 COMMON_CFLAGS :=
 METAL_CFLAGS :=
 
-include $(srcdir)/kernel/platforms/$(platform)/main.mk
+include $(srcdir)/kernel/$(platform)/main.mk
 include $(srcdir)/kernel/port/main.mk
 
 DEBUG ?= -g
@@ -23,7 +23,7 @@ CFLAGS := $(COMMON_CFLAGS) $(METAL_CFLAGS)
 
 LIBS = -lgcc
 
-linker_script = $(srcdir)/kernel/platforms/$(platform)/link.ld
+linker_script = $(srcdir)/kernel/$(platform)/link.ld
 
 objects := $(ssrc:.S=.o) $(csrc:.c=.o)
 

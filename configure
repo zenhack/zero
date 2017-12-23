@@ -30,7 +30,7 @@ srcdir="`dirname $0`"
 objdir="$PWD"
 
 [ -z "$platform" ] && errf 'option --platform=... must be supplied.'
-[ -d "$srcdir/kernel/platforms/$platform" ] || \
+[ -d "$srcdir/kernel/$platform" ] || \
 	errf '%s is not a valid platform.' "$platform"
 
 (cd "$srcdir"; find * -type d) | \
