@@ -16,7 +16,7 @@
  * The KEEP_* macros produce masks that are the inverse of their MASK_*
  * counterparts.
  */
-#define MASK_LO(bits) ((-1)<<(bits))
+#define MASK_LO(bits) ((~0u)<<(bits))
 #define KEEP_LO(bits) (~MASK_LO(bits))
 #define MASK_HI(bits) KEEP_LO(bits)
 #define KEEP_HI(bits) MASK_LO(bits)
