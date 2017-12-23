@@ -32,6 +32,7 @@ objdir="$PWD"
 [ -z "$platform" ] && errf 'option --platform=... must be supplied.'
 [ -d "$srcdir/kernel/$platform" ] || \
 	errf '%s is not a valid platform.' "$platform"
+[ "$platform" = port ] && errf 'port is not a valid platform.'
 
 (cd "$srcdir"; find * -type d) | \
 	xargs -n 1 mkdir -p
