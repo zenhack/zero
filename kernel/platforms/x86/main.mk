@@ -36,7 +36,8 @@ cleanfiles += \
 
 COMMON_CFLAGS += \
 	-I $(srcdir)/kernel/platforms/x86/include \
-	-Wno-address-of-packed-member
+	-Wno-address-of-packed-member \
+	-mno-mmx -mno-sse -mno-avx
 
 HOST_CC := cc -m32
 
