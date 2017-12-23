@@ -1,14 +1,14 @@
 #ifndef KERNEL_ARCH_LOCK_H
 #define KERNEL_ARCH_LOCK_H
 
-#include <kernel/x86/asm.h>
+#include <stdint.h>
 #include <kernel/port/panic.h>
 
 typedef uint32_t mutex_t;
 
 static inline
 uint32_t try_acquire(mutex_t *mutex) {
-	return !cmpxchg(0, mutex, 1);
+	return __sync_bool_compare_and_swap(mutex, 0, 1);
 }
 
 static inline
@@ -18,8 +18,7 @@ void wait_acquire(mutex_t *mutex) {
 
 static inline
 void release(mutex_t *mutex) {
-	uint32_t old = cmpxchg(1, mutex, 0);
-	if(!old) {
+	if (!__sync_bool_compare_and_swap(mutex, 1, 0)) {
 		panic("BUG: Called release() on an unlocked mutex!");
 	}
 };

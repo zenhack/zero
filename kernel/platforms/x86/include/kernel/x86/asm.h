@@ -25,15 +25,4 @@ void wrmsr(uint32_t msr, uint64_t value) {
 	__asm__ ("wrmsr" :: "c"(msr), "a"(lo), "d"(hi));
 }
 
-static inline
-uint32_t cmpxchg(uint32_t eax, uint32_t *dest, uint32_t src) {
-	__asm__ volatile(
-		"lock\n"
-		"cmpxchg %d[src], %d[dest]\n"
-		: "=a"(eax), "=m"(*dest)
-		: "a"(eax), [dest] "m"(*dest), [src] "r"(src)
-	);
-	return eax;
-}
-
 #endif
