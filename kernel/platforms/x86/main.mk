@@ -35,7 +35,8 @@ cleanfiles += \
 	kernel/platforms/x86/isr_gen.c
 
 COMMON_CFLAGS += \
-	-I $(srcdir)/kernel/platforms/x86/include
+	-I $(srcdir)/kernel/platforms/x86/include \
+	-Wno-address-of-packed-member
 
 HOST_CC := cc -m32
 
