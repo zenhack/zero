@@ -2,27 +2,25 @@
 #include <kernel/x86/portio.h>
 
 /* offsets from serial port address: */
-static const uint16_t
 /* when DLAB = 0 : */
-	DATA_REG = 0,
-	INT_ENABLE =1,
+#define DATA_REG 0
+#define INT_ENABLE 1
 /* when DLAB = 1 : */
-	BAUD_DIV_LSB = 0,
-	BAUD_DIV_MSB = 1,
+#define BAUD_DIV_LSB 0
+#define BAUD_DIV_MSB 1
 /* regardless of DLAB: */
-	INT_ID_FIFO = 2,
-	LINE_CNTL_REG = 3, /* DLAB is the MSB */
-	MODEM_CNTL_REG = 4,
-	LINE_STATUS_REG = 5,
-	MODEM_STATUS_REG = 6,
-	SCRATCH_REG = 7;
+#define INT_ID_FIFO 2
+#define LINE_CNTL_REG 3 /* DLAB is the MSB */
+#define MODEM_CNTL_REG 4
+#define LINE_STATUS_REG 5
+#define MODEM_STATUS_REG 6
+#define SCRATCH_REG 7
 
-static const uint8_t
-	DLAB_SET = (1<<7),
-	DLAB_CLEAR = 0,
-	DATABITS_8 = 0x3,
-	NO_PARITY = 0,
-	LINE_READY_STATUS = (1<<5);
+#define DLAB_SET (1<<7)
+#define DLAB_CLEAR 0
+#define DATABITS_8 0x3
+#define NO_PARITY 0
+#define LINE_READY_STATUS (1<<5)
 
 static size_t serial_write(FILE *stream, void *buf, size_t len);
 
