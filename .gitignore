@@ -1,4 +1,5 @@
 *.o
+*.dmk
 *.bin
 *.elf
 *.swp
