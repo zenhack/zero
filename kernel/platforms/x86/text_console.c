@@ -1,6 +1,6 @@
 #include <kernel/x86/text_console.h>
 #include <kernel/x86/portio.h>
-#include <kernel/arch/lock.h>
+#include <kernel/port/lock.h>
 
 #define VGA_CNTL 0x3d4
 #define VGA_DATA 0x3d5

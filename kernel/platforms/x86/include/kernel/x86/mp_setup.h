@@ -2,7 +2,7 @@
 #define KERNEL_X86_MP_SETUP_H
 
 #include <kernel/port/data.h>
-#include <kernel/arch/lock.h>
+#include <kernel/port/lock.h>
 
 /* Start multiprocessor initialization. This should be called by the bootstrap
  * processor. It will detect the number of logical cpus in the system and allocate

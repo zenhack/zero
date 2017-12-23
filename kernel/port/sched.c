@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <kernel/port/sched.h>
-#include <kernel/arch/lock.h>
+#include <kernel/port/lock.h>
 
 static Queue ready;
 static mutex_t ready_lock;

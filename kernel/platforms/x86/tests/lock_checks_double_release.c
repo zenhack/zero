@@ -1,4 +1,4 @@
-#include <kernel/arch/lock.h>
+#include <kernel/port/lock.h>
 #include <assert.h>
 
 /* release() should call panic() if (and only if) passed an unlocked mutex. */

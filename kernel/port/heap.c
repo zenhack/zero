@@ -3,7 +3,7 @@
 #include <kernel/port/units.h>
 #include <kernel/port/stdio.h>
 #include <kernel/port/panic.h>
-#include <kernel/arch/lock.h>
+#include <kernel/port/lock.h>
 
 static mutex_t heap_lock;
 

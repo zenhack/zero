@@ -1,6 +1,4 @@
 
-include $(srcdir)/kernel/arch/arm/main.mk
-
 all: kernel.rpi.bin
 
 COMMON_CFLAGS += \

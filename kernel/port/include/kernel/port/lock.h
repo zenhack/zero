@@ -1,5 +1,5 @@
-#ifndef KERNEL_ARCH_LOCK_H
-#define KERNEL_ARCH_LOCK_H
+#ifndef KERNEL_PORT_LOCK_H
+#define KERNEL_PORT_LOCK_H
 
 #include <stdint.h>
 #include <kernel/port/panic.h>
